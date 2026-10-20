@@ -13,12 +13,6 @@ export type PrintLine = {
   total: string;
 };
 
-/**
- * Pratinjau cetak dokumen dengan kop perusahaan (D10).
- * Kop: logo placeholder + nama/alamat/telepon/NPWP dari company_settings.
- * Tombol "Cetak" memakai window.print(); gaya cetak diatur di globals.css
- * (.print-document) agar hanya dokumen yang tercetak.
- */
 export function PrintPreview({
   open,
   onClose,
@@ -40,135 +34,107 @@ export function PrintPreview({
   notes?: string | null;
   extraBlock?: React.ReactNode;
 }) {
+  const logoInitial = letterhead.companyName.trim().slice(0, 2).toUpperCase() || "MB";
+
   return (
-    <GlassModal open={open} onClose={onClose} title={`Pratinjau — ${title}`}>
-      <div className="print-document rounded-2xl bg-white/[0.04] border border-white/15 p-5 sm:p-7 text-slate-100">
+    <GlassModal open={open} onClose={onClose} title={title} subtitle="Pratinjau cetak dengan kop perusahaan" wide>
+      <div className="paper">
         {/* Kop perusahaan */}
-        <div className="flex items-start gap-4 pb-4 border-b-2 border-white/25">
-          <div
-            aria-hidden
-            className="shrink-0 w-14 h-14 rounded-2xl bg-teal-400/25 border border-teal-300/50 flex items-center justify-center text-teal-200 font-extrabold text-lg"
-          >
-            {letterhead.companyName.trim().charAt(0).toUpperCase() || "E"}
+        <div className="p-head">
+          <div className="p-logo" aria-hidden="true">
+            {logoInitial}
           </div>
-          <div className="min-w-0">
-            <p className="text-lg font-extrabold leading-tight">
-              {letterhead.companyName}
-            </p>
-            <p className="text-xs text-slate-300/90 mt-1 leading-relaxed">
-              {letterhead.address}
-              <br />
-              {letterhead.phone}
+          <div>
+            <div className="p-co">{letterhead.companyName}</div>
+            <div className="p-addr">{letterhead.address}</div>
+            <div className="p-addr">
+              Telp. {letterhead.phone}
               {letterhead.npwp ? ` · NPWP ${letterhead.npwp}` : ""}
-            </p>
+            </div>
           </div>
         </div>
 
-        {/* Judul dokumen */}
-        <h3 className="text-center text-xl font-extrabold tracking-wide mt-5 mb-4 uppercase">
-          {title}
-        </h3>
+        {/* Judul Dokumen */}
+        <h4 className="p-title">{title}</h4>
 
-        {/* Meta */}
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm mb-5">
-          {meta.map(([k, v]) => (
-            <div key={k} className="flex gap-2">
-              <dt className="text-slate-400 shrink-0 w-28">{k}</dt>
-              <dd className="font-medium">: {v}</dd>
-            </div>
-          ))}
-        </dl>
-
-        {extraBlock}
-
-        {/* Tabel baris */}
-        <div className="overflow-x-auto -mx-1 px-1">
-          <table className="w-full text-sm min-w-[560px]">
-            <thead>
-              <tr className="border-y border-white/25 text-left">
-                <th className="py-2 pr-2 w-10">No</th>
-                <th className="py-2 pr-2">Uraian</th>
-                <th className="py-2 pr-2 text-right">Jumlah</th>
-                <th className="py-2 pr-2 text-right">Harga Satuan</th>
-                <th className="py-2 text-right">Total</th>
-              </tr>
-            </thead>
+        {/* Meta Dokumen */}
+        <div className="p-meta">
+          <table>
             <tbody>
-              {lines.map((l) => (
-                <tr key={l.no} className="border-b border-white/10">
-                  <td className="py-2 pr-2">{l.no}</td>
-                  <td className="py-2 pr-2">
-                    {l.description}
-                    {l.unit ? (
-                      <span className="text-slate-400"> ({l.unit})</span>
-                    ) : null}
-                  </td>
-                  <td className="py-2 pr-2 text-right">{l.qty}</td>
-                  <td className="py-2 pr-2 text-right">{l.unitPrice}</td>
-                  <td className="py-2 text-right font-medium">{l.total}</td>
+              {meta.map(([k, v]) => (
+                <tr key={k}>
+                  <td>{k}</td>
+                  <td>: <b>{v}</b></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Total */}
-        <div className="flex justify-end mt-4">
-          <dl className="w-full sm:w-64 space-y-1.5 text-sm">
-            {totals.map(([k, v, strong]) => (
-              <div
-                key={k}
-                className={`flex justify-between gap-4 ${
-                  strong ? "font-extrabold text-base" : ""
-                }`}
-              >
-                <dt className="text-slate-400">{k}</dt>
-                <dd>{v}</dd>
-              </div>
+        {extraBlock}
+
+        {/* Tabel Rincian */}
+        <table>
+          <thead>
+            <tr>
+              <th style={{ width: 40 }}>No</th>
+              <th>Uraian</th>
+              <th className="num">Jumlah</th>
+              <th className="num">Harga Satuan</th>
+              <th className="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lines.map((l) => (
+              <tr key={l.no}>
+                <td>{l.no}</td>
+                <td>
+                  {l.description}
+                  {l.unit ? <span className="text-slate-500"> ({l.unit})</span> : null}
+                </td>
+                <td className="num">{l.qty}</td>
+                <td className="num">{l.unitPrice}</td>
+                <td className="num" style={{ fontWeight: 600 }}>{l.total}</td>
+              </tr>
             ))}
-          </dl>
+          </tbody>
+        </table>
+
+        {/* Total Ringkasan */}
+        <div className="p-tot">
+          <table>
+            <tbody>
+              {totals.map(([k, v, strong]) => (
+                <tr key={k} className={strong ? "grand" : ""}>
+                  <td>{k}</td>
+                  <td className="num">{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {notes && (
-          <p className="text-xs text-slate-300/90 mt-5 whitespace-pre-line">
-            Catatan: {notes}
-          </p>
-        )}
+        {notes && <div className="p-note">Catatan: {notes}</div>}
 
-        {/* Tanda tangan */}
-        <div className="grid grid-cols-2 gap-4 mt-8 text-sm text-center">
-          <div>
-            <p className="text-slate-400">Hormat kami,</p>
-            <div className="h-16" />
-            <p className="font-semibold border-t border-white/25 pt-1 inline-block px-6">
-              {letterhead.companyName}
-            </p>
+        {/* Area Tanda Tangan */}
+        <div className="p-sign">
+          <div className="sg">
+            <div>Hormat kami,</div>
+            <div className="nm">{letterhead.companyName}</div>
           </div>
-          <div>
-            <p className="text-slate-400">Penerima,</p>
-            <div className="h-16" />
-            <p className="font-semibold border-t border-white/25 pt-1 inline-block px-6">
-              ( Nama &amp; Tanda Tangan )
-            </p>
+          <div className="sg">
+            <div>Penerima,</div>
+            <div className="nm">( Nama &amp; Tanda Tangan )</div>
           </div>
         </div>
       </div>
 
-      <div className="no-print flex flex-col sm:flex-row gap-3 sm:justify-end mt-4">
-        <GlassButton
-          type="button"
-          variant="ghost"
-          onClick={onClose}
-          className="w-full sm:w-auto"
-        >
+      <div className="no-print modal-foot" style={{ marginTop: 16 }}>
+        <GlassButton type="button" variant="ghost" onClick={onClose}>
           Tutup
         </GlassButton>
-        <GlassButton
-          type="button"
-          onClick={() => window.print()}
-          className="w-full sm:w-auto"
-        >
-          🖨 Cetak
+        <GlassButton type="button" variant="primary" onClick={() => window.print()}>
+          🖨 Cetak Dokumen
         </GlassButton>
       </div>
     </GlassModal>

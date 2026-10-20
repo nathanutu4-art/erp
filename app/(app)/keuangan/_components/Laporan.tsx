@@ -1,5 +1,4 @@
-import { GlassCard } from "@/components/ui/GlassCard";
-import { formatIDR } from "@/lib/format";
+import { formatIDR, formatTanggal } from "@/lib/format";
 
 // ---------------------------------------------------------------------------
 // Jenis data agregat yang dihitung di page.tsx (server)
@@ -10,7 +9,15 @@ export type ReportAccountLine = {
   name: string;
   debit: number;
   credit: number;
-  saldo: number; // mengikuti saldo normal akun
+  saldo: number;
+};
+
+export type CashFlowItem = {
+  entryNumber?: string;
+  entryDate?: string;
+  description?: string;
+  amount: number;
+  label?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -31,93 +38,76 @@ export function LaporanLabaRugi({
   periodeLabel: string;
 }) {
   const labaBersih = totalRevenue - totalExpense;
-  const kosong = revenues.length === 0 && expenses.length === 0;
 
   return (
-    <div>
-      <p className="text-sm text-slate-300/80 mb-4">
-        Periode: <span className="font-semibold text-slate-100">{periodeLabel}</span>
-        {" "}· disusun dari jurnal berstatus Dibukukan.
-      </p>
-
-      {kosong ? (
-        <GlassCard className="p-6">
-          <p className="text-sm text-slate-300/70 text-center py-8">
-            Belum ada transaksi pendapatan maupun beban pada periode ini.
-          </p>
-        </GlassCard>
-      ) : (
-        <div className="space-y-4">
-          <GlassCard className="p-4 sm:p-6">
-            <h2 className="text-base font-bold text-slate-100 mb-3">Pendapatan</h2>
-            {revenues.length === 0 ? (
-              <p className="text-sm text-slate-300/70">Rp 0</p>
-            ) : (
-              <dl className="space-y-2">
-                {revenues.map((r) => (
-                  <div
-                    key={r.code}
-                    className="flex items-center justify-between gap-3 text-sm"
-                  >
-                    <dt className="text-slate-200 min-w-0">
-                      <span className="font-mono text-slate-300/70 mr-2">
-                        {r.code}
-                      </span>
-                      {r.name}
-                    </dt>
-                    <dd className="font-semibold text-slate-100 whitespace-nowrap">
-                      {formatIDR(r.saldo)}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-            <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/15 text-sm font-bold">
-              <span className="text-slate-100">Total Pendapatan</span>
-              <span className="text-teal-200">{formatIDR(totalRevenue)}</span>
-            </div>
-          </GlassCard>
-
-          <GlassCard className="p-4 sm:p-6">
-            <h2 className="text-base font-bold text-slate-100 mb-3">Beban</h2>
-            {expenses.length === 0 ? (
-              <p className="text-sm text-slate-300/70">Rp 0</p>
-            ) : (
-              <dl className="space-y-2">
-                {expenses.map((r) => (
-                  <div
-                    key={r.code}
-                    className="flex items-center justify-between gap-3 text-sm"
-                  >
-                    <dt className="text-slate-200 min-w-0">
-                      <span className="font-mono text-slate-300/70 mr-2">
-                        {r.code}
-                      </span>
-                      {r.name}
-                    </dt>
-                    <dd className="font-semibold text-slate-100 whitespace-nowrap">
-                      {formatIDR(r.saldo)}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-            <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/15 text-sm font-bold">
-              <span className="text-slate-100">Total Beban</span>
-              <span className="text-rose-200">{formatIDR(totalExpense)}</span>
-            </div>
-          </GlassCard>
-
-          <GlassCard strong className="p-4 sm:p-6">
-            <div className="flex items-center justify-between text-base font-extrabold">
-              <span className="text-slate-100">Laba Bersih</span>
-              <span className={labaBersih < 0 ? "text-rose-200" : "text-teal-200"}>
-                {formatIDR(labaBersih)}
-              </span>
-            </div>
-          </GlassCard>
+    <div className="card report">
+      <div className="report-head">
+        <div className="r-co">PT MAJU BERSAMA</div>
+        <div className="r-title">LAPORAN LABA RUGI</div>
+        <div className="r-per">
+          Periode: {periodeLabel} · Jurnal Terposting · dalam Rupiah
         </div>
-      )}
+      </div>
+
+      <table>
+        <tbody>
+          {/* PENDAPATAN */}
+          <tr className="r-sec">
+            <td colSpan={2}>PENDAPATAN USAHA</td>
+          </tr>
+          {revenues.length === 0 ? (
+            <tr className="r-sub">
+              <td>Tidak ada akun pendapatan</td>
+              <td className="r-num">Rp 0</td>
+            </tr>
+          ) : (
+            revenues.map((r) => (
+              <tr key={r.code} className="r-sub">
+                <td>
+                  <span className="mono mr-2 text-slate-400">{r.code}</span>
+                  {r.name}
+                </td>
+                <td className="r-num">{formatIDR(r.saldo)}</td>
+              </tr>
+            ))
+          )}
+          <tr className="r-total">
+            <td>Total Pendapatan Usaha</td>
+            <td className="r-num">{formatIDR(totalRevenue)}</td>
+          </tr>
+
+          {/* BEBAN */}
+          <tr className="r-sec">
+            <td colSpan={2}>BEBAN OPERASIONAL</td>
+          </tr>
+          {expenses.length === 0 ? (
+            <tr className="r-sub">
+              <td>Tidak ada akun beban</td>
+              <td className="r-num">Rp 0</td>
+            </tr>
+          ) : (
+            expenses.map((r) => (
+              <tr key={r.code} className="r-sub">
+                <td>
+                  <span className="mono mr-2 text-slate-400">{r.code}</span>
+                  {r.name}
+                </td>
+                <td className="r-num">{formatIDR(r.saldo)}</td>
+              </tr>
+            ))
+          )}
+          <tr className="r-total">
+            <td>Total Beban Operasional</td>
+            <td className="r-num">{formatIDR(totalExpense)}</td>
+          </tr>
+
+          {/* LABA BERSIH */}
+          <tr className="r-grand">
+            <td>LABA BERSIH BERJALAN</td>
+            <td className="r-num">{formatIDR(labaBersih)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -143,116 +133,86 @@ export function LaporanNeraca({
   totalEquity: number;
   tanggalLabel: string;
 }) {
-  const sisiKanan = totalLiability + totalEquity;
-  const selisih = Math.round((totalAsset - sisiKanan) * 100) / 100;
-  const seimbang = Math.abs(selisih) < 0.01;
-  const kosong =
-    assets.length === 0 && liabilities.length === 0 && equities.length === 0;
-
-  const Section = ({
-    title,
-    lines,
-    total,
-  }: {
-    title: string;
-    lines: ReportAccountLine[];
-    total: number;
-  }) => (
-    <GlassCard className="p-4 sm:p-6">
-      <h2 className="text-base font-bold text-slate-100 mb-3">{title}</h2>
-      {lines.length === 0 ? (
-        <p className="text-sm text-slate-300/70">Rp 0</p>
-      ) : (
-        <dl className="space-y-2">
-          {lines.map((r) => (
-            <div
-              key={r.code}
-              className="flex items-center justify-between gap-3 text-sm"
-            >
-              <dt className="text-slate-200 min-w-0">
-                <span className="font-mono text-slate-300/70 mr-2">{r.code}</span>
-                {r.name}
-              </dt>
-              <dd
-                className={`font-semibold whitespace-nowrap ${
-                  r.saldo < 0 ? "text-rose-200" : "text-slate-100"
-                }`}
-              >
-                {formatIDR(r.saldo)}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      )}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/15 text-sm font-bold">
-        <span className="text-slate-100">Total {title}</span>
-        <span className="text-slate-100">{formatIDR(total)}</span>
-      </div>
-    </GlassCard>
-  );
+  const totalLiabEquity = totalLiability + totalEquity;
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <p className="text-sm text-slate-300/80">
-          Per tanggal:{" "}
-          <span className="font-semibold text-slate-100">{tanggalLabel}</span>
-        </p>
-        <span
-          className={`inline-flex items-center min-h-[44px] text-xs font-bold rounded-full px-4 border ${
-            seimbang
-              ? "bg-teal-400/20 text-teal-200 border-teal-300/40"
-              : "bg-rose-500/20 text-rose-200 border-rose-300/40"
-          }`}
-          role="status"
-        >
-          {seimbang
-            ? "✓ Neraca seimbang"
-            : `⚠ Neraca TIDAK seimbang — selisih ${formatIDR(Math.abs(selisih))}`}
-        </span>
+    <div className="card report">
+      <div className="report-head">
+        <div className="r-co">PT MAJU BERSAMA</div>
+        <div className="r-title">NERACA (LAPORAN POSISI KEUANGAN)</div>
+        <div className="r-per">Per {tanggalLabel} · dalam Rupiah</div>
       </div>
 
-      {kosong ? (
-        <GlassCard className="p-6">
-          <p className="text-sm text-slate-300/70 text-center py-8">
-            Belum ada saldo akun neraca hingga tanggal tersebut.
-          </p>
-        </GlassCard>
-      ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <Section title="Aset" lines={assets} total={totalAsset} />
-          <div className="space-y-4">
-            <Section
-              title="Liabilitas"
-              lines={liabilities}
-              total={totalLiability}
-            />
-            <Section title="Ekuitas" lines={equities} total={totalEquity} />
-            <GlassCard strong className="p-4 sm:p-6">
-              <div className="flex items-center justify-between text-sm font-bold">
-                <span className="text-slate-100">
-                  Total Liabilitas + Ekuitas
-                </span>
-                <span className="text-slate-100">{formatIDR(sisiKanan)}</span>
-              </div>
-            </GlassCard>
-          </div>
-        </div>
-      )}
+      <table>
+        <tbody>
+          {/* ASET */}
+          <tr className="r-sec">
+            <td colSpan={2}>ASET</td>
+          </tr>
+          {assets.map((a) => (
+            <tr key={a.code} className="r-sub">
+              <td>
+                <span className="mono mr-2 text-slate-400">{a.code}</span>
+                {a.name}
+              </td>
+              <td className="r-num">{formatIDR(a.saldo)}</td>
+            </tr>
+          ))}
+          <tr className="r-grand">
+            <td>TOTAL ASET</td>
+            <td className="r-num">{formatIDR(totalAsset)}</td>
+          </tr>
+
+          {/* LIABILITAS */}
+          <tr className="r-sec">
+            <td colSpan={2}>LIABILITAS</td>
+          </tr>
+          {liabilities.map((l) => (
+            <tr key={l.code} className="r-sub">
+              <td>
+                <span className="mono mr-2 text-slate-400">{l.code}</span>
+                {l.name}
+              </td>
+              <td className="r-num">{formatIDR(l.saldo)}</td>
+            </tr>
+          ))}
+          <tr className="r-total">
+            <td>Total Liabilitas</td>
+            <td className="r-num">{formatIDR(totalLiability)}</td>
+          </tr>
+
+          {/* EKUITAS */}
+          <tr className="r-sec">
+            <td colSpan={2}>EKUITAS</td>
+          </tr>
+          {equities.map((e) => (
+            <tr key={e.code} className="r-sub">
+              <td>
+                <span className="mono mr-2 text-slate-400">{e.code}</span>
+                {e.name}
+              </td>
+              <td className="r-num">{formatIDR(e.saldo)}</td>
+            </tr>
+          ))}
+          <tr className="r-total">
+            <td>Total Ekuitas</td>
+            <td className="r-num">{formatIDR(totalEquity)}</td>
+          </tr>
+
+          {/* TOTAL LIABILITAS & EKUITAS */}
+          <tr className="r-grand">
+            <td>TOTAL LIABILITAS &amp; EKUITAS</td>
+            <td className="r-num">{formatIDR(totalLiabEquity)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Arus Kas (disederhanakan)
+// Arus Kas
 // ---------------------------------------------------------------------------
-
-export type CashFlowItem = {
-  entryNumber: string;
-  entryDate: string;
-  description: string;
-  amount: number; // positif = kas masuk, negatif = kas keluar
-};
 
 export function LaporanArusKas({
   operasi,
@@ -275,118 +235,122 @@ export function LaporanArusKas({
   saldoAkhir: number;
   periodeLabel: string;
 }) {
-  const bersih = totalOperasi + totalInvestasi + totalPendanaan;
-  const kosong =
-    operasi.length === 0 && investasi.length === 0 && pendanaan.length === 0;
-
-  const Section = ({
-    title,
-    items,
-    total,
-    hint,
-  }: {
-    title: string;
-    items: CashFlowItem[];
-    total: number;
-    hint: string;
-  }) => (
-    <GlassCard className="p-4 sm:p-6">
-      <h2 className="text-base font-bold text-slate-100">{title}</h2>
-      <p className="text-xs text-slate-300/70 mt-0.5 mb-3">{hint}</p>
-      {items.length === 0 ? (
-        <p className="text-sm text-slate-300/70">Rp 0</p>
-      ) : (
-        <dl className="space-y-2">
-          {items.map((it) => (
-            <div
-              key={`${it.entryNumber}-${it.amount}`}
-              className="flex items-center justify-between gap-3 text-sm"
-            >
-              <dt className="text-slate-200 min-w-0 truncate">
-                <span className="font-mono text-slate-300/70 mr-2">
-                  {it.entryNumber}
-                </span>
-                {it.description}
-              </dt>
-              <dd
-                className={`font-semibold whitespace-nowrap ${
-                  it.amount < 0 ? "text-rose-200" : "text-teal-200"
-                }`}
-              >
-                {it.amount < 0 ? "(" : ""}
-                {formatIDR(Math.abs(it.amount))}
-                {it.amount < 0 ? ")" : ""}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      )}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/15 text-sm font-bold">
-        <span className="text-slate-100">Kas bersih {title.toLowerCase()}</span>
-        <span className={total < 0 ? "text-rose-200" : "text-teal-200"}>
-          {formatIDR(total)}
-        </span>
-      </div>
-    </GlassCard>
-  );
+  const kenaikanBersih = totalOperasi + totalInvestasi + totalPendanaan;
 
   return (
-    <div>
-      <p className="text-sm text-slate-300/80 mb-4">
-        Periode: <span className="font-semibold text-slate-100">{periodeLabel}</span>
-        {" "}· disusun dari mutasi akun Kas & Bank pada jurnal berstatus
-        Dibukukan.
-      </p>
-
-      {kosong ? (
-        <GlassCard className="p-6">
-          <p className="text-sm text-slate-300/70 text-center py-8">
-            Belum ada mutasi kas pada periode ini.
-          </p>
-        </GlassCard>
-      ) : (
-        <div className="space-y-4">
-          <Section
-            title="Aktivitas Operasi"
-            items={operasi}
-            total={totalOperasi}
-            hint="Kas dari pendapatan, beban, dan modal kerja."
-          />
-          <Section
-            title="Aktivitas Investasi"
-            items={investasi}
-            total={totalInvestasi}
-            hint="Kas dari perolehan/pelepasan aset tetap."
-          />
-          <Section
-            title="Aktivitas Pendanaan"
-            items={pendanaan}
-            total={totalPendanaan}
-            hint="Kas dari pinjaman, modal, dan prive pemilik."
-          />
-
-          <GlassCard strong className="p-4 sm:p-6 space-y-2 text-sm font-bold">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-200">Kenaikan (penurunan) kas bersih</span>
-              <span className={bersih < 0 ? "text-rose-200" : "text-teal-200"}>
-                {formatIDR(bersih)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-200">Saldo kas awal periode</span>
-              <span className="text-slate-100">{formatIDR(saldoAwal)}</span>
-            </div>
-            <div className="flex items-center justify-between pt-2 border-t border-white/15 text-base">
-              <span className="text-slate-100">Saldo kas akhir periode</span>
-              <span className="text-slate-100">{formatIDR(saldoAkhir)}</span>
-            </div>
-          </GlassCard>
+    <div className="card report">
+      <div className="report-head">
+        <div className="r-co">PT MAJU BERSAMA</div>
+        <div className="r-title">LAPORAN ARUS KAS</div>
+        <div className="r-per">
+          Periode: {periodeLabel} · Metode Langsung · dalam Rupiah
         </div>
-      )}
-      <p className="text-xs text-slate-400/70 mt-3">
-        Klasifikasi aktivitas mengikuti akun lawan pada tiap jurnal: aset tetap
-        → investasi; liabilitas/ekuitas → pendanaan; selebihnya → operasi.
-      </p>
+      </div>
+
+      <table>
+        <tbody>
+          {/* OPERASI */}
+          <tr className="r-sec">
+            <td colSpan={2}>Arus Kas dari Aktivitas Operasi</td>
+          </tr>
+          {operasi.length === 0 ? (
+            <tr className="r-sub">
+              <td>Tidak ada arus kas operasi pada periode ini</td>
+              <td className="r-num">Rp 0</td>
+            </tr>
+          ) : (
+            operasi.map((item, idx) => (
+              <tr key={idx} className="r-sub">
+                <td>
+                  {item.entryDate ? (
+                    <span className="mono mr-2 text-slate-400">
+                      {formatTanggal(item.entryDate)}
+                    </span>
+                  ) : null}
+                  {item.description || item.label || item.entryNumber}
+                </td>
+                <td className="r-num">{formatIDR(item.amount)}</td>
+              </tr>
+            ))
+          )}
+          <tr className="r-total">
+            <td>Arus Kas Bersih dari Aktivitas Operasi</td>
+            <td className="r-num">{formatIDR(totalOperasi)}</td>
+          </tr>
+
+          {/* INVESTASI */}
+          <tr className="r-sec">
+            <td colSpan={2}>Arus Kas dari Aktivitas Investasi</td>
+          </tr>
+          {investasi.length === 0 ? (
+            <tr className="r-sub">
+              <td>Tidak ada arus kas investasi pada periode ini</td>
+              <td className="r-num">Rp 0</td>
+            </tr>
+          ) : (
+            investasi.map((item, idx) => (
+              <tr key={idx} className="r-sub">
+                <td>
+                  {item.entryDate ? (
+                    <span className="mono mr-2 text-slate-400">
+                      {formatTanggal(item.entryDate)}
+                    </span>
+                  ) : null}
+                  {item.description || item.label || item.entryNumber}
+                </td>
+                <td className="r-num">{formatIDR(item.amount)}</td>
+              </tr>
+            ))
+          )}
+          <tr className="r-total">
+            <td>Arus Kas Bersih dari Aktivitas Investasi</td>
+            <td className="r-num">{formatIDR(totalInvestasi)}</td>
+          </tr>
+
+          {/* PENDANAAN */}
+          <tr className="r-sec">
+            <td colSpan={2}>Arus Kas dari Aktivitas Pendanaan</td>
+          </tr>
+          {pendanaan.length === 0 ? (
+            <tr className="r-sub">
+              <td>Tidak ada arus kas pendanaan pada periode ini</td>
+              <td className="r-num">Rp 0</td>
+            </tr>
+          ) : (
+            pendanaan.map((item, idx) => (
+              <tr key={idx} className="r-sub">
+                <td>
+                  {item.entryDate ? (
+                    <span className="mono mr-2 text-slate-400">
+                      {formatTanggal(item.entryDate)}
+                    </span>
+                  ) : null}
+                  {item.description || item.label || item.entryNumber}
+                </td>
+                <td className="r-num">{formatIDR(item.amount)}</td>
+              </tr>
+            ))
+          )}
+          <tr className="r-total">
+            <td>Arus Kas Bersih dari Aktivitas Pendanaan</td>
+            <td className="r-num">{formatIDR(totalPendanaan)}</td>
+          </tr>
+
+          {/* PERUBAHAN BERSIH */}
+          <tr className="r-grand">
+            <td>Kenaikan / (Penurunan) Bersih Kas &amp; Setara Kas</td>
+            <td className="r-num">{formatIDR(kenaikanBersih)}</td>
+          </tr>
+          <tr className="r-line">
+            <td>Saldo Kas &amp; Setara Kas — Awal Periode</td>
+            <td className="r-num">{formatIDR(saldoAwal)}</td>
+          </tr>
+          <tr className="r-grand">
+            <td>Saldo Kas &amp; Setara Kas — Akhir Periode</td>
+            <td className="r-num">{formatIDR(saldoAkhir)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

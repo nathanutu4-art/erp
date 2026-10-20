@@ -285,54 +285,83 @@ export function SuratJalanClient({
   };
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 mb-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 min-w-0">
-            <GlassInput
-              id="cari-sj"
-              label="Cari Surat Jalan"
-              placeholder="Nomor SJ, invoice, atau penerima…"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-            />
-          </div>
-        </div>
-        <div>
-          <GlassButton onClick={() => setShowBuat(true)}>
-            + Buat Surat Jalan
-          </GlassButton>
-        </div>
-      </div>
-
+    <div className="fin-view on">
       {actionError && (
-        <div className="mb-4">
+        <div style={{ marginBottom: "14px" }}>
           <ErrorAlert message={actionError} />
         </div>
       )}
 
-      <GlassCard className="p-2 sm:p-4">
-        {filtered.length === 0 ? (
-          <EmptyState>
-            {deliveryNotes.length === 0
-              ? "Belum ada surat jalan. Buat surat jalan pertama Anda."
-              : "Tidak ada surat jalan yang cocok dengan pencarian."}
-          </EmptyState>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[820px]">
-              <thead>
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Surat Jalan Pengiriman</h3>
+            <p>
+              Menampilkan {filtered.length} dari {deliveryNotes.length} dokumen pengiriman
+            </p>
+          </div>
+          <div className="spacer" />
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Cari nomor SJ, invoice, penerima…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowBuat(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Buat Surat Jalan
+          </button>
+        </div>
+
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "160px" }}>Nomor SJ</th>
+                <th>Invoice</th>
+                <th style={{ width: "130px" }}>Tanggal</th>
+                <th>Penerima</th>
+                <th style={{ width: "130px" }}>Status</th>
+                <th style={{ width: "200px", textAlign: "right" }}>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
                 <tr>
-                  <th>Nomor SJ</th>
-                  <th>Invoice</th>
-                  <th>Tanggal</th>
-                  <th>Penerima</th>
-                  <th>Status</th>
-                  <th className="!text-right">Aksi</th>
+                  <td colSpan={6}>
+                    <div className="empty-note">
+                      {deliveryNotes.length === 0
+                        ? "Belum ada surat jalan. Buat surat jalan pertama Anda."
+                        : "Tidak ada surat jalan yang cocok dengan pencarian."}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map((d) => (
+              ) : (
+                filtered.map((d) => (
                   <tr key={d.id}>
                     <td className="font-mono font-semibold whitespace-nowrap">
                       {d.delivery_number}
@@ -385,16 +414,15 @@ export function SuratJalanClient({
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        Alur: Draf → Dikirim → Diterima. Rincian barang diambil dari invoice
-        yang ditautkan.
+      <p className="fin-note">
+        Alur: Draf → Dikirim → Diterima. Rincian barang diambil dari invoice yang ditautkan.
       </p>
 
       {showBuat && (

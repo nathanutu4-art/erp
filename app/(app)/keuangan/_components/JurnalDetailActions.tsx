@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GlassButton } from "@/components/ui/GlassButton";
 import {
   postJournalEntry,
   voidJournalEntry,
@@ -38,22 +37,32 @@ export function JurnalDetailActions({
       {error && (
         <p
           role="alert"
-          className="text-sm font-medium text-rose-200 bg-rose-500/15 border border-rose-300/40 rounded-xl px-4 py-3 mb-4"
+          style={{
+            fontSize: "13px",
+            color: "var(--danger)",
+            background: "var(--danger-soft)",
+            border: "1px solid var(--danger)",
+            borderRadius: "9px",
+            padding: "8px 12px",
+            marginBottom: "10px",
+          }}
         >
           {error}
         </p>
       )}
       {status === "draft" && (
-        <div className="flex flex-col sm:flex-row gap-3">
-          <GlassButton
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={() => run(postJournalEntry)}
             disabled={pending}
-            className="w-full sm:w-auto"
           >
             {pending ? "Membukukan…" : "Bukukan Jurnal"}
-          </GlassButton>
-          <GlassButton
-            variant="danger"
+          </button>
+          <button
+            type="button"
+            className="btn btn-danger-ghost"
             onClick={() => {
               if (
                 window.confirm(
@@ -64,15 +73,15 @@ export function JurnalDetailActions({
               }
             }}
             disabled={pending}
-            className="w-full sm:w-auto"
           >
             Batalkan Draf
-          </GlassButton>
+          </button>
         </div>
       )}
       {status === "posted" && (
-        <GlassButton
-          variant="danger"
+        <button
+          type="button"
+          className="btn btn-danger-ghost"
           onClick={() => {
             if (
               window.confirm(
@@ -83,10 +92,9 @@ export function JurnalDetailActions({
             }
           }}
           disabled={pending}
-          className="w-full sm:w-auto"
         >
           {pending ? "Membatalkan…" : "Batalkan Jurnal (Void)"}
-        </GlassButton>
+        </button>
       )}
     </div>
   );

@@ -380,18 +380,9 @@ export default async function SdmPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">
-          SDM & Kehadiran
-        </h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Data karyawan, kehadiran, pengajuan cuti/izin/sakit, dan payroll.
-        </p>
-      </div>
-
       <SdmTabs active={tab} />
 
-      <div className="mt-6">
+      <div>
         {tab === "karyawan" && <KaryawanTab q={params.q ?? ""} />}
         {tab === "kehadiran" && (
           <KehadiranTab

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 type DataTableProps = {
   title: string;
+  subtitle?: string;
   searchPlaceholder?: string;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
@@ -11,6 +12,7 @@ type DataTableProps = {
 
 export function DataTable({
   title,
+  subtitle,
   searchPlaceholder = "Cari…",
   searchValue,
   onSearchChange,
@@ -18,23 +20,36 @@ export function DataTable({
   children,
 }: DataTableProps) {
   return (
-    <section aria-label={title}>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-        <div className="relative flex-1">
-          <input
-            type="search"
-            value={searchValue}
-            onChange={(e) => onSearchChange?.(e.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label={searchPlaceholder}
-            className="glass-input w-full min-h-[44px] pl-4 pr-4 rounded-xl text-sm"
-          />
+    <div className="card">
+      <div className="card-head">
+        <div>
+          <h3>{title}</h3>
+          {subtitle && <p>{subtitle}</p>}
         </div>
+        <div className="spacer" />
+        {onSearchChange !== undefined && (
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              value={searchValue ?? ""}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder={searchPlaceholder}
+            />
+          </div>
+        )}
         {actions}
       </div>
-      <div className="glass rounded-2xl">
-        <div className="tbl-wrap">{children}</div>
-      </div>
-    </section>
+      <div className="tbl-wrap">{children}</div>
+    </div>
   );
 }

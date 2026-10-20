@@ -455,40 +455,57 @@ export function InvoiceClient({
     customers.some((c) => c.is_active) && products.some((p) => p.is_active);
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 mb-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 min-w-0">
-            <GlassInput
-              id="cari-invoice"
-              label="Cari Invoice"
-              placeholder="Nomor invoice, pelanggan, atau no. faktur pajak…"
+    <div className="fin-view on">
+      {actionError && (
+        <div style={{ marginBottom: "14px" }}>
+          <ErrorAlert message={actionError} />
+        </div>
+      )}
+
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Faktur Penjualan (Sales Invoice)</h3>
+            <p>
+              Menampilkan {filtered.length} dari {invoices.length} faktur penjualan
+            </p>
+          </div>
+          <div className="spacer" />
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Cari nomor invoice, pelanggan, atau NSFP…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="sm:w-56">
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Status
-            </span>
-            <select
-              aria-label="Filter status invoice"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
-            >
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s} className="text-slate-900">
-                  {s === "semua"
-                    ? "Semua status"
-                    : (INVOICE_STATUS_LABEL[s] ?? s)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <GlassButton
+          <select
+            aria-label="Filter status invoice"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="select"
+          >
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>
+                {s === "semua"
+                  ? "Semua Status"
+                  : (INVOICE_STATUS_LABEL[s] ?? s)}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={() => setShowBuat(true)}
             disabled={!canCreate}
             title={
@@ -497,41 +514,46 @@ export function InvoiceClient({
                 : "Butuh minimal 1 pelanggan aktif dan 1 produk aktif"
             }
           >
-            + Buat Invoice
-          </GlassButton>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Buat Invoice
+          </button>
         </div>
-      </div>
 
-      {actionError && (
-        <div className="mb-4">
-          <ErrorAlert message={actionError} />
-        </div>
-      )}
-
-      <GlassCard className="p-2 sm:p-4">
-        {filtered.length === 0 ? (
-          <EmptyState>
-            {invoices.length === 0
-              ? "Belum ada invoice penjualan. Buat invoice pertama Anda."
-              : "Tidak ada invoice yang cocok dengan pencarian."}
-          </EmptyState>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[1020px]">
-              <thead>
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "150px" }}>Nomor</th>
+                <th>Pelanggan</th>
+                <th style={{ width: "120px" }}>Tanggal</th>
+                <th>No. Faktur Pajak</th>
+                <th className="num">Total</th>
+                <th className="num">Sisa</th>
+                <th style={{ width: "120px" }}>Status</th>
+                <th style={{ width: "240px", textAlign: "right" }}>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
                 <tr>
-                  <th>Nomor</th>
-                  <th>Pelanggan</th>
-                  <th>Tanggal</th>
-                  <th>No. Faktur Pajak</th>
-                  <th className="!text-right">Total</th>
-                  <th className="!text-right">Sisa</th>
-                  <th>Status</th>
-                  <th className="!text-right">Aksi</th>
+                  <td colSpan={8}>
+                    <div className="empty-note">
+                      {invoices.length === 0
+                        ? "Belum ada invoice penjualan. Buat invoice pertama Anda."
+                        : "Tidak ada invoice yang cocok dengan pencarian."}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map((inv) => {
+              ) : (
+                filtered.map((inv) => {
                   const remaining =
                     Math.round((inv.total_amount - inv.paid_amount) * 100) / 100;
                   const payable = ["sent", "partial"].includes(inv.status);
@@ -606,17 +628,15 @@ export function InvoiceClient({
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        Nomor Faktur Pajak diambil otomatis dari rentang NSFP aktif (D11).
-        Tombol e-Faktur mengunduh CSV format impor aplikasi e-Faktur DJP —
-        tanpa integrasi API langsung (cakup v1).
+      <p className="fin-note">
+        Nomor Faktur Pajak diambil otomatis dari rentang NSFP aktif. Tombol e-Faktur mengunduh CSV format impor aplikasi e-Faktur DJP.
       </p>
 
       {showBuat && (

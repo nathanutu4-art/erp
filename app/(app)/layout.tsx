@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/ui/AppShell";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SignOutButton } from "@/components/ui/SignOutButton";
@@ -40,10 +41,22 @@ export default async function AppLayout({
     );
   }
 
+  const supabase = await createClient();
+  const { data: company } = await supabase
+    .from("companies")
+    .select("name, address")
+    .eq("singleton", true)
+    .maybeSingle();
+
+  const companyName = company?.name?.trim() || "PT Maju Bersama";
+  const companyAddress = company?.address?.trim() || "";
+
   return (
     <AppShell
       userName={current.profile.full_name}
       roleName={current.profile.role_name}
+      companyName={companyName}
+      companyAddress={companyAddress}
     >
       {children}
     </AppShell>

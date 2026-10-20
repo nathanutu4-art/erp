@@ -2,9 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassModal } from "@/components/ui/GlassModal";
 import { createWarehouse, type WarehouseSummary } from "../actions";
 import { formatQty } from "../_lib/inventory";
@@ -40,55 +37,71 @@ function TambahGudangModal({ onClose }: { onClose: () => void }) {
 
   return (
     <GlassModal open onClose={onClose} title="Tambah Gudang">
-      <form onSubmit={submit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <GlassInput
-            id="gudang-kode"
-            label="Kode Gudang *"
-            placeholder="mis. GDG-01"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <GlassInput
-            id="gudang-nama"
-            label="Nama Gudang *"
-            placeholder="mis. Gudang Utama"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+      <form onSubmit={submit}>
+        <div className="field-row">
+          <div className="field">
+            <label htmlFor="gudang-kode">Kode Gudang *</label>
+            <input
+              id="gudang-kode"
+              type="text"
+              placeholder="mis. GDG-01"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="gudang-nama">Nama Gudang *</label>
+            <input
+              id="gudang-nama"
+              type="text"
+              placeholder="mis. Gudang Utama"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="gudang-alamat">Alamat (opsional)</label>
+          <input
+            id="gudang-alamat"
+            type="text"
+            placeholder="Alamat lengkap lokasi gudang"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
           />
         </div>
-        <GlassInput
-          id="gudang-alamat"
-          label="Alamat (opsional)"
-          placeholder="Alamat lengkap gudang"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
         {error && (
           <p
             role="alert"
-            className="text-sm font-medium text-rose-200 bg-rose-500/15 border border-rose-300/40 rounded-xl px-4 py-3"
+            style={{
+              fontSize: "13px",
+              color: "var(--danger)",
+              background: "var(--danger-soft)",
+              border: "1px solid var(--danger)",
+              borderRadius: "9px",
+              padding: "10px 14px",
+              marginBottom: "14px",
+            }}
           >
             {error}
           </p>
         )}
-        <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
-          <GlassButton
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "9px", marginTop: "18px" }}>
+          <button
             type="button"
-            variant="ghost"
+            className="btn"
             onClick={onClose}
             disabled={pending}
-            className="w-full sm:w-auto"
           >
             Batal
-          </GlassButton>
-          <GlassButton
+          </button>
+          <button
             type="submit"
             disabled={!canSave}
-            className="w-full sm:w-auto"
+            className="btn btn-primary"
           >
             {pending ? "Menyimpan…" : "Simpan Gudang"}
-          </GlassButton>
+          </button>
         </div>
       </form>
     </GlassModal>
@@ -103,59 +116,84 @@ export function GudangClient({
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div>
-      <div className="flex justify-end mb-4">
-        <GlassButton onClick={() => setShowModal(true)}>
-          + Tambah Gudang
-        </GlassButton>
-      </div>
+    <div className="fin-view on">
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Daftar Gudang</h3>
+            <p>{warehouses.length} lokasi gudang terdaftar</p>
+          </div>
+          <div className="spacer" />
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Tambah Gudang
+          </button>
+        </div>
 
-      <GlassCard className="p-2 sm:p-4">
-        {warehouses.length === 0 ? (
-          <p className="text-sm text-slate-300/70 text-center py-10 px-4">
-            Belum ada gudang. Tambahkan gudang pertama Anda — setiap mutasi
-            stok membutuhkan gudang.
-          </p>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[640px]">
-              <thead>
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "120px" }}>Kode</th>
+                <th>Nama Gudang</th>
+                <th>Alamat</th>
+                <th className="num" style={{ width: "180px" }}>
+                  Estimasi Stok
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {warehouses.length === 0 ? (
                 <tr>
-                  <th>Kode</th>
-                  <th>Nama Gudang</th>
-                  <th>Alamat</th>
-                  <th className="!text-right">Estimasi Stok</th>
+                  <td colSpan={4}>
+                    <div className="empty-note">
+                      Belum ada gudang. Tambahkan gudang pertama Anda — setiap mutasi stok membutuhkan gudang.
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {warehouses.map((w) => (
+              ) : (
+                warehouses.map((w) => (
                   <tr key={w.id}>
-                    <td className="font-mono font-semibold">{w.code}</td>
-                    <td className="!whitespace-normal min-w-[160px]">
+                    <td className="mono" style={{ fontWeight: 600 }}>
+                      {w.code}
+                    </td>
+                    <td>
                       {w.name}
                       {w.is_default && (
-                        <span className="ml-2 inline-block text-[11px] font-semibold rounded-full px-2 py-0.5 border bg-teal-400/20 text-teal-200 border-teal-300/40">
+                        <span
+                          className="badge b-green"
+                          style={{ marginLeft: "8px", fontSize: "10.5px", padding: "1px 7px" }}
+                        >
                           Utama
                         </span>
                       )}
                     </td>
-                    <td className="!whitespace-normal min-w-[180px] text-slate-300/80">
-                      {w.address || "—"}
-                    </td>
-                    <td className="!text-right font-semibold">
+                    <td style={{ color: "var(--ink-2)" }}>{w.address || "—"}</td>
+                    <td className="num" style={{ fontWeight: 700 }}>
                       {formatQty(w.estimatedStock)}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        “Estimasi Stok” dihitung dari trail mutasi (total masuk − total keluar)
-        per gudang; stok resmi produk tercatat pada level produk.
+      <p className="fin-note">
+        Estimasi stok dihitung dari trail mutasi (total masuk − total keluar) per gudang; stok resmi produk tercatat pada level produk.
       </p>
 
       {showModal && (

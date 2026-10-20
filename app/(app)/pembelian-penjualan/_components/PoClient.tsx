@@ -372,38 +372,55 @@ export function PoClient({
     suppliers.some((s) => s.is_active) && products.some((p) => p.is_active);
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 mb-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 min-w-0">
-            <GlassInput
-              id="cari-po"
-              label="Cari PO"
-              placeholder="Nomor PO atau nama pemasok…"
+    <div className="fin-view on">
+      {actionError && (
+        <div style={{ marginBottom: "14px" }}>
+          <ErrorAlert message={actionError} />
+        </div>
+      )}
+
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Pesanan Pembelian (Purchase Order)</h3>
+            <p>
+              Menampilkan {filtered.length} dari {pos.length} pesanan pembelian
+            </p>
+          </div>
+          <div className="spacer" />
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Cari nomor PO atau pemasok…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="sm:w-56">
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Status
-            </span>
-            <select
-              aria-label="Filter status PO"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
-            >
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s} className="text-slate-900">
-                  {s === "semua" ? "Semua status" : (PO_STATUS_LABEL[s] ?? s)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <GlassButton
+          <select
+            aria-label="Filter status PO"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="select"
+          >
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>
+                {s === "semua" ? "Semua Status" : (PO_STATUS_LABEL[s] ?? s)}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={() => setShowBuat(true)}
             disabled={!canCreate}
             title={
@@ -412,39 +429,46 @@ export function PoClient({
                 : "Butuh minimal 1 pemasok aktif dan 1 produk aktif"
             }
           >
-            + Buat PO
-          </GlassButton>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Buat PO
+          </button>
         </div>
-      </div>
 
-      {actionError && (
-        <div className="mb-4">
-          <ErrorAlert message={actionError} />
-        </div>
-      )}
-
-      <GlassCard className="p-2 sm:p-4">
-        {filtered.length === 0 ? (
-          <EmptyState>
-            {pos.length === 0
-              ? "Belum ada purchase order. Buat PO pertama Anda."
-              : "Tidak ada PO yang cocok dengan pencarian."}
-          </EmptyState>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[880px]">
-              <thead>
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "160px" }}>Nomor PO</th>
+                <th>Pemasok</th>
+                <th style={{ width: "130px" }}>Tanggal</th>
+                <th className="num" style={{ width: "160px" }}>
+                  Total
+                </th>
+                <th style={{ width: "130px" }}>Status</th>
+                <th style={{ width: "180px", textAlign: "right" }}>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
                 <tr>
-                  <th>Nomor PO</th>
-                  <th>Pemasok</th>
-                  <th>Tanggal</th>
-                  <th className="!text-right">Total</th>
-                  <th>Status</th>
-                  <th className="!text-right">Aksi</th>
+                  <td colSpan={6}>
+                    <div className="empty-note">
+                      {pos.length === 0
+                        ? "Belum ada purchase order. Buat PO pertama Anda."
+                        : "Tidak ada PO yang cocok dengan pencarian."}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map((p) => (
+              ) : (
+                filtered.map((p) => (
                   <tr key={p.id}>
                     <td className="font-mono font-semibold whitespace-nowrap">
                       {p.po_number}
@@ -523,17 +547,15 @@ export function PoClient({
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        Alur: Draf → Menunggu Persetujuan → Disetujui → Selesai (barang
-        diterima). Persetujuan oleh atasan langsung; HR dapat mengambil alih
-        (D9). Penerimaan barang membukukan stok masuk otomatis (HPP average).
+      <p className="fin-note">
+        Alur: Draf → Menunggu Persetujuan → Disetujui → Selesai (barang diterima). Persetujuan oleh atasan langsung; HR dapat mengambil alih. Penerimaan barang membukukan stok masuk otomatis (HPP average).
       </p>
 
       {showBuat && (

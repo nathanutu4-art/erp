@@ -93,12 +93,6 @@ export default async function AsetPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">Aset Tetap</h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Daftar aset, jadwal penyusutan garis lurus, dan pelepasan aset.
-        </p>
-      </div>
       <AsetClient assets={assets} categories={categories} />
     </div>
   );

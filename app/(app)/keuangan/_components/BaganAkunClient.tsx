@@ -2,9 +2,6 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassModal } from "@/components/ui/GlassModal";
 import { createAccount } from "../actions";
 import { formatIDR } from "@/lib/format";
@@ -29,12 +26,29 @@ export type AccountRow = {
 };
 
 const TYPE_FILTERS: Array<{ value: string; label: string }> = [
-  { value: "semua", label: "Semua tipe" },
+  { value: "semua", label: "Semua Tipe" },
   ...ACCOUNT_TYPE_ORDER.map((t) => ({
     value: t,
     label: ACCOUNT_TYPE_LABEL[t],
   })),
 ];
+
+function typeBadgeClass(t: AccountType): string {
+  switch (t) {
+    case "asset":
+      return "b-green";
+    case "liability":
+      return "b-red";
+    case "equity":
+      return "b-blue";
+    case "revenue":
+      return "b-green";
+    case "expense":
+      return "b-amber";
+    default:
+      return "b-gray";
+  }
+}
 
 function TambahAkunModal({
   accounts,
@@ -78,27 +92,28 @@ function TambahAkunModal({
 
   return (
     <GlassModal open onClose={onClose} title="Tambah Akun">
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <GlassInput
-            id="akun-kode"
-            label="Kode Akun *"
-            placeholder="mis. 1180"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <div>
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Tipe Akun *
-            </span>
+      <div>
+        <div className="field-row">
+          <div className="field">
+            <label htmlFor="akun-kode">Kode Akun *</label>
+            <input
+              id="akun-kode"
+              type="text"
+              placeholder="mis. 1180"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="akun-tipe">Tipe Akun *</label>
             <select
+              id="akun-tipe"
               aria-label="Tipe akun"
               value={type}
               onChange={(e) => setType(e.target.value as AccountType)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
             >
               {ACCOUNT_TYPE_ORDER.map((t) => (
-                <option key={t} value={t} className="text-slate-900">
+                <option key={t} value={t}>
                   {ACCOUNT_TYPE_LABEL[t]}
                 </option>
               ))}
@@ -106,84 +121,96 @@ function TambahAkunModal({
           </div>
         </div>
 
-        <GlassInput
-          id="akun-nama"
-          label="Nama Akun *"
-          placeholder="mis. Perlengkapan Kantor"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div className="field">
+          <label htmlFor="akun-nama">Nama Akun *</label>
+          <input
+            id="akun-nama"
+            type="text"
+            placeholder="mis. Perlengkapan Kantor"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-        <div>
-          <span className="block text-sm font-medium text-slate-200 mb-1.5">
-            Akun Induk (opsional)
-          </span>
+        <div className="field">
+          <label htmlFor="akun-induk">Akun Induk (opsional)</label>
           <select
+            id="akun-induk"
             aria-label="Akun induk"
             value={parentId}
             onChange={(e) => setParentId(e.target.value)}
-            className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
           >
-            <option value="" className="text-slate-900">
-              — Tanpa induk —
-            </option>
+            <option value="">— Tanpa induk —</option>
             {accounts.map((a) => (
-              <option key={a.id} value={a.id} className="text-slate-900">
+              <option key={a.id} value={a.id}>
                 {a.code} — {a.name}
               </option>
             ))}
           </select>
         </div>
 
-        <label className="flex items-start gap-3 cursor-pointer min-h-[44px]">
-          <input
-            type="checkbox"
-            checked={isHeader}
-            onChange={(e) => setIsHeader(e.target.checked)}
-            className="mt-1 h-5 w-5 accent-teal-400"
-          />
-          <span className="text-sm text-slate-200">
-            Akun induk / header
-            <span className="block text-xs text-slate-300/70 mt-0.5">
-              Akun header hanya mengelompokkan akun anak dan tidak dapat
-              dijurnal langsung.
+        <div className="field">
+          <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={isHeader}
+              onChange={(e) => setIsHeader(e.target.checked)}
+              style={{ width: "18px", height: "18px", accentColor: "var(--accent)" }}
+            />
+            <span>
+              Akun Induk / Header
+              <span style={{ display: "block", fontSize: "12px", color: "var(--muted)", fontWeight: 400 }}>
+                Akun header hanya mengelompokkan akun anak dan tidak dapat dijurnal langsung.
+              </span>
             </span>
-          </span>
-        </label>
+          </label>
+        </div>
 
-        <GlassInput
-          id="akun-deskripsi"
-          label="Deskripsi (opsional)"
-          placeholder="Keterangan singkat akun"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <div className="field">
+          <label htmlFor="akun-deskripsi">Deskripsi (opsional)</label>
+          <input
+            id="akun-deskripsi"
+            type="text"
+            placeholder="Keterangan singkat akun"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
 
         {error && (
           <p
             role="alert"
-            className="text-sm font-medium text-rose-200 bg-rose-500/15 border border-rose-300/40 rounded-xl px-4 py-3"
+            style={{
+              fontSize: "13px",
+              color: "var(--danger)",
+              background: "var(--danger-soft)",
+              border: "1px solid var(--danger)",
+              borderRadius: "9px",
+              padding: "10px 14px",
+              marginBottom: "14px",
+            }}
           >
             {error}
           </p>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
-          <GlassButton
-            variant="ghost"
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "9px", marginTop: "18px" }}>
+          <button
+            type="button"
+            className="btn"
             onClick={onClose}
             disabled={pending}
-            className="w-full sm:w-auto"
           >
             Batal
-          </GlassButton>
-          <GlassButton
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={submit}
             disabled={!canSave}
-            className="w-full sm:w-auto"
           >
             {pending ? "Menyimpan…" : "Simpan Akun"}
-          </GlassButton>
+          </button>
         </div>
       </div>
     </GlassModal>
@@ -207,107 +234,144 @@ export function BaganAkunClient({ accounts }: { accounts: AccountRow[] }) {
   }, [accounts, q, typeFilter]);
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row gap-3 md:items-end md:justify-between mb-4">
-        <div className="flex flex-col sm:flex-row gap-3 flex-1">
-          <div className="flex-1 min-w-0">
-            <GlassInput
-              id="cari-akun"
-              label="Cari Akun"
-              placeholder="Kode atau nama akun…"
+    <div className="fin-view on">
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Bagan Akun (Chart of Accounts)</h3>
+            <p>
+              Menampilkan {filtered.length} dari {accounts.length} akun terdaftar
+            </p>
+          </div>
+          <div className="spacer" />
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Cari kode atau nama akun…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="sm:w-52">
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Tipe
-            </span>
-            <select
-              aria-label="Filter tipe akun"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
+          <select
+            className="select"
+            aria-label="Filter tipe akun"
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            {TYPE_FILTERS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
             >
-              {TYPE_FILTERS.map((f) => (
-                <option key={f.value} value={f.value} className="text-slate-900">
-                  {f.label}
-                </option>
-              ))}
-            </select>
-          </div>
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Tambah Akun
+          </button>
         </div>
-        <GlassButton onClick={() => setShowModal(true)} className="md:shrink-0">
-          + Tambah Akun
-        </GlassButton>
-      </div>
 
-      <GlassCard className="p-2 sm:p-4">
-        {filtered.length === 0 ? (
-          <p className="text-sm text-slate-300/70 text-center py-10 px-4">
-            {accounts.length === 0
-              ? "Belum ada akun. Tambahkan akun pertama Anda."
-              : "Tidak ada akun yang cocok dengan pencarian."}
-          </p>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[640px]">
-              <thead>
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "110px" }}>Kode</th>
+                <th>Nama Akun</th>
+                <th style={{ width: "190px" }}>Tipe</th>
+                <th style={{ width: "130px" }}>Saldo Normal</th>
+                <th className="num" style={{ width: "190px" }}>
+                  Saldo (Rp)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
                 <tr>
-                  <th>Kode</th>
-                  <th>Nama Akun</th>
-                  <th>Tipe</th>
-                  <th>Induk</th>
-                  <th className="!text-right">Saldo</th>
+                  <td colSpan={5}>
+                    <div className="empty-note">
+                      {accounts.length === 0
+                        ? "Belum ada akun. Tambahkan akun pertama Anda."
+                        : "Tidak ada akun yang cocok dengan pencarian."}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map((a) => {
+              ) : (
+                filtered.map((a) => {
                   const saldo = saldoNormal(a.type, a.debit, a.credit);
+                  const normal =
+                    a.type === "asset" || a.type === "expense"
+                      ? "Debit"
+                      : "Kredit";
                   return (
                     <tr key={a.id}>
-                      <td className="font-mono font-semibold">{a.code}</td>
-                      <td className="!whitespace-normal min-w-[180px]">
-                        {a.name}
-                        <span className="ml-2 space-x-1">
-                          {a.is_header && (
-                            <span className="inline-block text-[11px] font-semibold rounded-full px-2 py-0.5 border bg-violet-400/20 text-violet-200 border-violet-300/40">
-                              Header
-                            </span>
-                          )}
-                          {!a.is_active && (
-                            <span className="inline-block text-[11px] font-semibold rounded-full px-2 py-0.5 border bg-slate-400/20 text-slate-300 border-slate-300/40">
-                              Nonaktif
-                            </span>
-                          )}
-                        </span>
+                      <td className="mono" style={{ fontWeight: 600 }}>
+                        {a.code}
                       </td>
                       <td>
-                        <span className="inline-block text-xs font-semibold rounded-full px-2.5 py-0.5 border bg-sky-400/15 text-sky-200 border-sky-300/40">
+                        {a.name}
+                        {a.is_header && (
+                          <span
+                            className="badge b-blue"
+                            style={{ marginLeft: "8px", fontSize: "10.5px", padding: "1px 7px" }}
+                          >
+                            Header
+                          </span>
+                        )}
+                        {!a.is_active && (
+                          <span
+                            className="badge b-gray"
+                            style={{ marginLeft: "8px", fontSize: "10.5px", padding: "1px 7px" }}
+                          >
+                            Nonaktif
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <span className={`badge ${typeBadgeClass(a.type)}`}>
+                          <i />
                           {ACCOUNT_TYPE_LABEL[a.type]}
                         </span>
                       </td>
-                      <td className="text-slate-300/80">
-                        {a.parentCode ? `${a.parentCode}` : "—"}
-                      </td>
-                      <td
-                        className={`!text-right font-semibold ${
-                          saldo < 0 ? "text-rose-200" : ""
-                        }`}
-                      >
-                        {formatIDR(saldo)}
+                      <td>{normal}</td>
+                      <td className="num">
+                        {saldo < 0 ? (
+                          <span className="neg">({formatIDR(Math.abs(saldo))})</span>
+                        ) : (
+                          formatIDR(saldo)
+                        )}
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        Saldo dihitung dari seluruh jurnal berstatus Dibukukan.
+      <p className="fin-note">
+        Saldo dihitung dari seluruh jurnal berstatus Dibukukan. Akun kontra (akumulasi penyusutan) ditampilkan sebagai pengurang bertanda kurung.
       </p>
 
       {showModal && (

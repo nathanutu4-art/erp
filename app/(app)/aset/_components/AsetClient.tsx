@@ -421,7 +421,29 @@ export function AsetClient({
   }, [filtered]);
 
   return (
-    <>
+    <div className="space-y-4">
+      <div className="stats-grid">
+        <div className="card stat">
+          <div className="s-label">Total Nilai Perolehan</div>
+          <div className="s-value">{formatIDR(totals.cost)}</div>
+          <div className="s-foot">Biaya perolehan historis</div>
+        </div>
+        <div className="card stat">
+          <div className="s-label">Akumulasi Penyusutan</div>
+          <div className="s-value neg">{formatIDR(totals.accum)}</div>
+          <div className="s-foot">Penyusutan s.d. periode berjalan</div>
+        </div>
+        <div className="card stat">
+          <div className="s-label">Nilai Buku Bersih</div>
+          <div className="s-value pos">{formatIDR(totals.book)}</div>
+          <div className="s-foot">Nilai buku di Neraca</div>
+        </div>
+        <div className="card stat">
+          <div className="s-label">Unit Aset Terdata</div>
+          <div className="s-value">{assets.length} Unit</div>
+          <div className="s-foot">{assets.filter((a) => a.status === "active").length} aktif beroperasi</div>
+        </div>
+      </div>
       <DataTable
         title="Daftar Aset Tetap"
         searchPlaceholder="Cari kode, nama, kategori…"
@@ -553,6 +575,6 @@ export function AsetClient({
           onClose={() => setDisposalTarget(null)}
         />
       )}
-    </>
+    </div>
   );
 }

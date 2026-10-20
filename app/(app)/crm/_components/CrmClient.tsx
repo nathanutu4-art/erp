@@ -67,106 +67,104 @@ function TambahPelangganModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <GlassModal open onClose={onClose} title="Tambah Pelanggan">
+    <GlassModal open onClose={onClose} title="Tambah Pelanggan" subtitle="Pelanggan baru akan dapat dipilih saat pembuatan invoice dan transaksi">
       <div className="space-y-4">
-        {error && (
-          <p
-            role="alert"
-            className="text-sm font-medium text-rose-200 bg-rose-500/15 border border-rose-300/40 rounded-xl px-4 py-3"
-          >
-            {error}
-          </p>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="field-row">
           <GlassInput
-            id="cust-kode"
+            id="cust-code"
             label="Kode Pelanggan *"
-            placeholder="mis. CUST-0001"
+            placeholder="cth. CUST-001"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
           <GlassInput
-            id="cust-nama"
-            label="Nama Pelanggan *"
-            placeholder="mis. PT Maju Jaya"
+            id="cust-name"
+            label="Nama Pelanggan / Perusahaan *"
+            placeholder="cth. PT Nusantara Retail"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <div className="field-row">
           <GlassInput
-            id="cust-kontak"
-            label="Nama Kontak"
-            placeholder="Nama PIC"
+            id="cust-cp"
+            label="Contact Person"
+            placeholder="Nama kontak PIC"
             value={contactPerson}
             onChange={(e) => setContactPerson(e.target.value)}
           />
           <GlassInput
-            id="cust-telp"
-            label="Telepon"
-            placeholder="mis. 0812xxxxxxx"
+            id="cust-phone"
+            label="No. Telepon / WhatsApp"
+            placeholder="08123456789"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
-        <GlassInput
-          id="cust-email"
-          label="Email"
-          type="email"
-          placeholder="mis. info@perusahaan.id"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <GlassInput
-          id="cust-alamat"
-          label="Alamat"
-          placeholder="Jalan, kota"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <div className="field-row">
           <GlassInput
-            id="cust-npwp"
+            id="cust-email"
+            type="email"
+            label="Email"
+            placeholder="kontak@perusahaan.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <GlassInput
+            id="cust-tax"
             label="NPWP"
-            placeholder="Nomor NPWP"
+            placeholder="00.000.000.0-000.000"
             value={taxId}
             onChange={(e) => setTaxId(e.target.value)}
           />
+        </div>
+
+        <div className="field-row">
           <GlassInput
             id="cust-limit"
-            label="Batas Kredit (Rp)"
             type="number"
-            min="0"
+            label="Limit Kredit (Rp)"
             placeholder="0"
             value={creditLimit}
             onChange={(e) => setCreditLimit(e.target.value)}
           />
+          <div className="field">
+            <label htmlFor="cust-active">Status Pelanggan</label>
+            <select
+              id="cust-active"
+              className="select"
+              style={{ width: "100%" }}
+              value={isActive ? "1" : "0"}
+              onChange={(e) => setIsActive(e.target.value === "1")}
+            >
+              <option value="1">Aktif</option>
+              <option value="0">Non-Aktif</option>
+            </select>
+          </div>
         </div>
-        <label className="flex items-center gap-3 min-h-[44px] cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-            className="w-5 h-5 accent-teal-400"
+
+        <div className="field">
+          <label htmlFor="cust-addr">Alamat Lengkap</label>
+          <textarea
+            id="cust-addr"
+            rows={2}
+            className="field"
+            style={{ width: "100%", padding: "9.5px 12px" }}
+            placeholder="Alamat kantor / gudang pengiriman"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
           />
-          <span className="text-sm font-medium text-slate-200">
-            Pelanggan aktif
-          </span>
-        </label>
-        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
-          <GlassButton
-            variant="ghost"
-            onClick={onClose}
-            disabled={pending}
-            className="w-full sm:w-auto"
-          >
+        </div>
+
+        {error && <div className="err-msg" style={{ display: "block" }}>{error}</div>}
+
+        <div className="modal-foot">
+          <GlassButton variant="ghost" onClick={onClose} disabled={pending}>
             Batal
           </GlassButton>
-          <GlassButton
-            onClick={submit}
-            disabled={!canSave}
-            className="w-full sm:w-auto"
-          >
+          <GlassButton variant="primary" onClick={submit} disabled={!canSave}>
             {pending ? "Menyimpan…" : "Simpan Pelanggan"}
           </GlassButton>
         </div>
@@ -196,29 +194,55 @@ export function CrmClient({ customers }: { customers: CustomerRow[] }) {
     [filtered]
   );
 
+  const totalOverdue = useMemo(
+    () => filtered.filter((c) => c.hasOverdue).length,
+    [filtered]
+  );
+
   return (
-    <>
+    <div className="space-y-4">
+      {/* Stats Grid */}
+      <div className="stats-grid cols-3">
+        <div className="card stat">
+          <div className="s-label">Total Pelanggan Terdaftar</div>
+          <div className="s-value">{customers.length}</div>
+          <div className="s-foot">Mitra bisnis aktif</div>
+        </div>
+        <div className="card stat">
+          <div className="s-label">Total Piutang Berjalan</div>
+          <div className="s-value pos">{formatIDR(totalPiutang)}</div>
+          <div className="s-foot">Termin pembayaran normal</div>
+        </div>
+        <div className="card stat">
+          <div className="s-label">Perhatian Jatuh Tempo</div>
+          <div className={`s-value ${totalOverdue > 0 ? "neg" : ""}`}>
+            {totalOverdue} Pelanggan
+          </div>
+          <div className="s-foot">Memerlukan penagihan</div>
+        </div>
+      </div>
+
       <DataTable
         title="Daftar Pelanggan"
-        searchPlaceholder="Cari kode, nama, kontak…"
+        subtitle={`Menampilkan ${filtered.length} dari ${customers.length} pelanggan`}
+        searchPlaceholder="Cari nama pelanggan, kode, kota…"
         searchValue={search}
         onSearchChange={setSearch}
         actions={
-          <GlassButton onClick={() => setShowModal(true)}>
+          <GlassButton onClick={() => setShowModal(true)} variant="primary">
             + Tambah Pelanggan
           </GlassButton>
         }
       >
-        <table className="w-full text-sm min-w-[760px]">
+        <table className="tbl">
           <thead>
-            <tr className="text-left text-slate-300/90">
-              <th className="px-4 py-3 font-semibold">Pelanggan</th>
-              <th className="px-4 py-3 font-semibold">Kontak</th>
-              <th className="px-4 py-3 font-semibold">Kota / Alamat</th>
-              <th className="px-4 py-3 font-semibold text-right">
-                Total Piutang
-              </th>
-              <th className="px-4 py-3 font-semibold">Status</th>
+            <tr>
+              <th style={{ width: 130 }}>Kode</th>
+              <th>Nama Pelanggan</th>
+              <th>Contact Person</th>
+              <th>Telepon / Alamat</th>
+              <th className="num">Sisa Piutang</th>
+              <th style={{ width: 120 }}>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -226,76 +250,52 @@ export function CrmClient({ customers }: { customers: CustomerRow[] }) {
               <tr
                 key={c.id}
                 onClick={() => router.push(`/crm/${c.id}`)}
-                className="border-t border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
+                className="row-link"
               >
-                <td className="px-4 py-3">
-                  <div className="font-semibold text-slate-100">{c.name}</div>
-                  <div className="text-xs text-slate-400">{c.code}</div>
+                <td className="mono" style={{ fontWeight: 600 }}>{c.code}</td>
+                <td>
+                  <span style={{ fontWeight: 600, color: "var(--ink)" }}>{c.name}</span>
                 </td>
-                <td className="px-4 py-3 text-slate-200">
-                  {c.contactPerson || "—"}
-                  {c.phone && (
-                    <div className="text-xs text-slate-400">{c.phone}</div>
+                <td>{c.contactPerson || "—"}</td>
+                <td className="muted small">
+                  {c.phone ? <span>{c.phone} · </span> : null}
+                  {c.address ? <span className="truncate">{c.address}</span> : "—"}
+                </td>
+                <td className="num font-semibold">
+                  {c.totalPiutang > 0 ? (
+                    <span className="pos">{formatIDR(c.totalPiutang)}</span>
+                  ) : (
+                    "—"
                   )}
                 </td>
-                <td className="px-4 py-3 text-slate-200 max-w-[220px] truncate">
-                  {c.address || "—"}
-                </td>
-                <td className="px-4 py-3 text-right font-semibold text-slate-100">
-                  {formatIDR(c.totalPiutang)}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    <span
-                      className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full border ${
-                        CUSTOMER_STATUS_STYLE[
-                          c.isActive ? "active" : "inactive"
-                        ]
-                      }`}
-                    >
-                      {CUSTOMER_STATUS_LABEL[c.isActive ? "active" : "inactive"]}
-                    </span>
-                    {c.hasOverdue && (
-                      <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full border bg-rose-500/20 text-rose-200 border-rose-300/40">
-                        Menunggak
-                      </span>
-                    )}
-                  </div>
+                <td>
+                  <span className={`badge ${c.isActive ? "b-green" : "b-gray"}`}>
+                    <i />
+                    {c.isActive ? "Aktif" : "Non-aktif"}
+                  </span>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-10 text-center text-slate-400"
-                >
-                  {customers.length === 0
-                    ? "Belum ada pelanggan. Tambahkan pelanggan pertama Anda."
-                    : "Tidak ada pelanggan yang cocok dengan pencarian."}
+                <td colSpan={6}>
+                  <div className="empty-note">
+                    Tidak ada pelanggan yang cocok dengan pencarian.
+                  </div>
                 </td>
               </tr>
             )}
           </tbody>
-          {filtered.length > 0 && (
-            <tfoot>
-              <tr className="border-t border-white/15">
-                <td
-                  colSpan={3}
-                  className="px-4 py-3 text-right font-semibold text-slate-200"
-                >
-                  Total Piutang
-                </td>
-                <td className="px-4 py-3 text-right font-extrabold text-slate-100">
-                  {formatIDR(totalPiutang)}
-                </td>
-                <td />
-              </tr>
-            </tfoot>
-          )}
         </table>
       </DataTable>
-      {showModal && <TambahPelangganModal onClose={() => setShowModal(false)} />}
-    </>
+
+      <p className="fin-note">
+        Klik baris pelanggan untuk melihat profil, riwayat invoice dan transaksi pembayaran.
+      </p>
+
+      {showModal && (
+        <TambahPelangganModal onClose={() => setShowModal(false)} />
+      )}
+    </div>
   );
 }

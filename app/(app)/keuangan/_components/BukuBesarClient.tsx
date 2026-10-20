@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
 import { getLedger, type LedgerResult } from "../actions";
 import { formatIDR, formatTanggal } from "@/lib/format";
 import type { AccountOption } from "../_lib/finance";
@@ -34,154 +32,185 @@ export function BukuBesarClient({
   };
 
   return (
-    <div>
-      <GlassCard className="p-4 sm:p-6 mb-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:items-end">
-          <div className="md:col-span-2">
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Akun
-            </span>
-            <select
-              aria-label="Pilih akun"
-              value={accountId}
-              onChange={(e) => setAccountId(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
-            >
-              <option value="" className="text-slate-900">
-                — Pilih akun —
-              </option>
-              {accounts.map((a) => (
-                <option key={a.id} value={a.id} className="text-slate-900">
-                  {a.code} — {a.name}
-                </option>
-              ))}
-            </select>
-          </div>
+    <div className="fin-view on">
+      <div className="card">
+        <div className="card-head">
           <div>
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Dari Tanggal
-            </span>
+            <h3>Buku Besar</h3>
+            <p>Mutasi dan saldo berjalan per akun</p>
+          </div>
+          <div className="spacer" />
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
             <input
               type="date"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
+              className="select"
+              style={{ height: "37px", padding: "0 10px" }}
+              aria-label="Dari tanggal"
             />
-          </div>
-          <div>
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Sampai Tanggal
-            </span>
+            <span style={{ color: "var(--muted)", fontSize: "12.5px" }}>s/d</span>
             <input
               type="date"
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
+              className="select"
+              style={{ height: "37px", padding: "0 10px" }}
+              aria-label="Sampai tanggal"
             />
           </div>
-        </div>
-        <div className="mt-4">
-          <GlassButton
+          <select
+            className="select"
+            value={accountId}
+            onChange={(e) => setAccountId(e.target.value)}
+            style={{ minWidth: "240px" }}
+            aria-label="Pilih akun"
+          >
+            <option value="">— Pilih Akun —</option>
+            {accounts.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.code} — {a.name}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={load}
             disabled={!accountId || pending || !from || !to}
-            className="w-full md:w-auto"
           >
-            {pending ? "Memuat…" : "Tampilkan Buku Besar"}
-          </GlassButton>
+            {pending ? "Memuat…" : "Tampilkan"}
+          </button>
         </div>
-      </GlassCard>
 
-      {!result ? (
-        <GlassCard className="p-6">
-          <p className="text-sm text-slate-300/70 text-center py-8">
-            Pilih akun dan rentang tanggal, lalu tekan “Tampilkan Buku Besar”.
-          </p>
-        </GlassCard>
-      ) : !result.ok ? (
-        <GlassCard className="p-6">
-          <p
-            role="alert"
-            className="text-sm font-medium text-rose-200 bg-rose-500/15 border border-rose-300/40 rounded-xl px-4 py-3"
-          >
-            {result.error}
-          </p>
-        </GlassCard>
-      ) : (
-        <GlassCard className="p-2 sm:p-4">
-          <div className="px-3 sm:px-4 pt-3 pb-4">
-            <h2 className="text-lg font-bold text-slate-100">
-              {result.account.code} — {result.account.name}
-            </h2>
-            <p className="text-xs text-slate-300/70 mt-1">
-              Periode {formatTanggal(from)} s.d. {formatTanggal(to)}
+        {!result ? (
+          <div className="empty-note">
+            Pilih akun dan rentang tanggal di atas, lalu klik &quot;Tampilkan&quot;.
+          </div>
+        ) : !result.ok ? (
+          <div style={{ padding: "18px 22px" }}>
+            <p
+              role="alert"
+              style={{
+                fontSize: "13px",
+                color: "var(--danger)",
+                background: "var(--danger-soft)",
+                border: "1px solid var(--danger)",
+                borderRadius: "9px",
+                padding: "10px 14px",
+              }}
+            >
+              {result.error}
             </p>
           </div>
-          {result.rows.length === 0 ? (
-            <p className="text-sm text-slate-300/70 text-center py-10 px-4">
-              Tidak ada mutasi pada periode ini. Saldo awal{" "}
-              {formatIDR(result.openingBalance)}.
-            </p>
-          ) : (
-            <div className="tbl-wrap">
-              <table className="min-w-[720px]">
+        ) : (
+          <>
+            <div
+              style={{
+                padding: "16px 22px 0",
+                display: "flex",
+                gap: "26px",
+                flexWrap: "wrap",
+              }}
+            >
+              <div className="small">
+                <span className="muted">Akun</span>
+                <br />
+                <b>
+                  {result.account.code} — {result.account.name}
+                </b>
+              </div>
+              <div className="small">
+                <span className="muted">Saldo Normal</span>
+                <br />
+                <b>
+                  {result.account.type === "asset" || result.account.type === "expense"
+                    ? "Debit"
+                    : "Kredit"}
+                </b>
+              </div>
+              <div className="small">
+                <span className="muted">Saldo Awal ({formatTanggal(from)})</span>
+                <br />
+                <b>{formatIDR(result.openingBalance)}</b>
+              </div>
+              <div className="small">
+                <span className="muted">Saldo Akhir ({formatTanggal(to)})</span>
+                <br />
+                <b className="pos">
+                  {formatIDR(
+                    result.rows.length > 0
+                      ? result.rows[result.rows.length - 1].runningBalance
+                      : result.openingBalance
+                  )}
+                </b>
+              </div>
+            </div>
+
+            <div className="tbl-wrap" style={{ marginTop: "12px" }}>
+              <table className="tbl">
                 <thead>
                   <tr>
-                    <th>Tanggal</th>
-                    <th>Nomor</th>
+                    <th style={{ width: "110px" }}>Tanggal</th>
+                    <th style={{ width: "130px" }}>Ref. Jurnal</th>
                     <th>Keterangan</th>
-                    <th className="!text-right">Debit</th>
-                    <th className="!text-right">Kredit</th>
-                    <th className="!text-right">Saldo Berjalan</th>
+                    <th className="num">Debit</th>
+                    <th className="num">Kredit</th>
+                    <th className="num">Saldo Berjalan</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="text-slate-300/80">
-                    <td colSpan={5} className="!whitespace-normal">
-                      Saldo awal
-                    </td>
-                    <td className="!text-right font-semibold">
+                  <tr style={{ color: "var(--muted)" }}>
+                    <td style={{ whiteSpace: "nowrap" }}>{formatTanggal(from)}</td>
+                    <td className="mono small">—</td>
+                    <td>Saldo Awal</td>
+                    <td className="num">—</td>
+                    <td className="num">—</td>
+                    <td className="num" style={{ fontWeight: 700 }}>
                       {formatIDR(result.openingBalance)}
                     </td>
                   </tr>
-                  {result.rows.map((r) => (
-                    <tr key={`${r.entryId}-${r.debit}-${r.credit}`}>
-                      <td className="whitespace-nowrap">
-                        {formatTanggal(r.entryDate)}
-                      </td>
-                      <td className="font-mono whitespace-nowrap">
-                        {r.entryNumber}
-                      </td>
-                      <td className="!whitespace-normal min-w-[180px] max-w-[300px]">
-                        {r.description}
-                      </td>
-                      <td className="!text-right whitespace-nowrap">
-                        {r.debit > 0 ? formatIDR(r.debit) : "—"}
-                      </td>
-                      <td className="!text-right whitespace-nowrap">
-                        {r.credit > 0 ? formatIDR(r.credit) : "—"}
-                      </td>
-                      <td
-                        className={`!text-right font-semibold whitespace-nowrap ${
-                          r.runningBalance < 0 ? "text-rose-200" : ""
-                        }`}
-                      >
-                        {formatIDR(r.runningBalance)}
+                  {result.rows.length === 0 ? (
+                    <tr>
+                      <td colSpan={6}>
+                        <div className="empty-note">
+                          Tidak ada mutasi transaksi pada periode ini.
+                        </div>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    result.rows.map((r) => (
+                      <tr key={`${r.entryId}-${r.debit}-${r.credit}`}>
+                        <td style={{ whiteSpace: "nowrap" }}>
+                          {formatTanggal(r.entryDate)}
+                        </td>
+                        <td className="mono small">{r.entryNumber}</td>
+                        <td>{r.description}</td>
+                        <td className="num">
+                          {r.debit > 0 ? formatIDR(r.debit) : "—"}
+                        </td>
+                        <td className="num">
+                          {r.credit > 0 ? formatIDR(r.credit) : "—"}
+                        </td>
+                        <td className="num" style={{ fontWeight: 700 }}>
+                          {r.runningBalance < 0 ? (
+                            <span className="neg">
+                              ({formatIDR(Math.abs(r.runningBalance))})
+                            </span>
+                          ) : (
+                            formatIDR(r.runningBalance)
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
                 <tfoot>
-                  <tr className="border-t border-white/20 font-bold">
-                    <td colSpan={3} className="!whitespace-normal">
-                      Total mutasi periode
-                    </td>
-                    <td className="!text-right whitespace-nowrap">
-                      {formatIDR(result.totalDebit)}
-                    </td>
-                    <td className="!text-right whitespace-nowrap">
-                      {formatIDR(result.totalCredit)}
-                    </td>
-                    <td className="!text-right whitespace-nowrap">
+                  <tr>
+                    <td colSpan={3}>Total Mutasi & Saldo Akhir</td>
+                    <td className="num">{formatIDR(result.totalDebit)}</td>
+                    <td className="num">{formatIDR(result.totalCredit)}</td>
+                    <td className="num">
                       {formatIDR(
                         result.rows.length > 0
                           ? result.rows[result.rows.length - 1].runningBalance
@@ -192,9 +221,13 @@ export function BukuBesarClient({
                 </tfoot>
               </table>
             </div>
-          )}
-        </GlassCard>
-      )}
+          </>
+        )}
+      </div>
+
+      <p className="fin-note">
+        Saldo akhir buku besar sama dengan saldo akun pada Bagan Akun dan Neraca.
+      </p>
     </div>
   );
 }

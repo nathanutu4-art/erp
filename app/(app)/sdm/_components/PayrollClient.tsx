@@ -2,9 +2,6 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassModal } from "@/components/ui/GlassModal";
 import {
   createPayrollPeriod,
@@ -17,7 +14,6 @@ import { formatIDR, formatTanggal } from "@/lib/format";
 import {
   computeSlip,
   PAYROLL_STATUS_LABEL,
-  PAYROLL_STATUS_STYLE,
   type EmployeeRow,
   type PayrollPeriodRow,
   type PayrollPeriodStatus,
@@ -55,43 +51,71 @@ function BuatPeriodeModal({ onClose }: { onClose: () => void }) {
 
   return (
     <GlassModal open onClose={onClose} title="Buat Periode Penggajian">
-      <div className="space-y-4">
-        <GlassInput
-          id="pp-nama"
-          label="Nama Periode *"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="cth. Gaji Oktober 2026"
-        />
-        <div className="grid grid-cols-2 gap-4">
-          <GlassInput
-            id="pp-start"
-            label="Tanggal Mulai *"
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <GlassInput
-            id="pp-end"
-            label="Tanggal Selesai *"
-            type="date"
-            value={endDate}
-            min={startDate}
-            onChange={(e) => setEndDate(e.target.value)}
+      <div>
+        <div className="field">
+          <label htmlFor="pp-nama">Nama Periode *</label>
+          <input
+            id="pp-nama"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="cth. Gaji Oktober 2026"
           />
         </div>
+        <div className="field-row">
+          <div className="field">
+            <label htmlFor="pp-start">Tanggal Mulai *</label>
+            <input
+              id="pp-start"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="pp-end">Tanggal Selesai *</label>
+            <input
+              id="pp-end"
+              type="date"
+              value={endDate}
+              min={startDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+        </div>
         {error && (
-          <p className="text-sm text-rose-300 bg-rose-500/10 border border-rose-300/30 rounded-xl px-4 py-2.5">
+          <p
+            role="alert"
+            style={{
+              fontSize: "13px",
+              color: "var(--danger)",
+              background: "var(--danger-soft)",
+              border: "1px solid var(--danger)",
+              borderRadius: "9px",
+              padding: "10px 14px",
+              marginBottom: "14px",
+            }}
+          >
             {error}
           </p>
         )}
-        <div className="flex justify-end gap-3 pt-2">
-          <GlassButton variant="ghost" onClick={onClose} disabled={pending}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "9px", marginTop: "18px" }}>
+          <button
+            type="button"
+            className="btn"
+            onClick={onClose}
+            disabled={pending}
+          >
             Batal
-          </GlassButton>
-          <GlassButton onClick={submit} disabled={pending || !name.trim()}>
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={submit}
+            disabled={pending || !name.trim()}
+          >
             {pending ? "Menyimpan…" : "Buat Periode"}
-          </GlassButton>
+          </button>
         </div>
       </div>
     </GlassModal>
@@ -123,47 +147,62 @@ function SlipModal({
   ];
   return (
     <GlassModal open onClose={onClose} title={`Slip Gaji — ${periodName}`}>
-      <div className="space-y-1 text-sm">
-        <div className="pb-3 mb-3 border-b border-white/10">
-          <p className="font-bold text-slate-100 text-base">{slip.employee_name}</p>
-          <p className="text-xs text-slate-400">
+      <div>
+        <div style={{ paddingBottom: "12px", marginBottom: "12px", borderBottom: "1px solid var(--line)" }}>
+          <b style={{ display: "block", fontSize: "16px" }}>{slip.employee_name}</b>
+          <span className="mono small muted">
             {slip.employee_code}
-            {slip.position ? ` • ${slip.position}` : ""}
-            {slip.department ? ` • ${slip.department}` : ""}
-          </p>
+            {slip.position ? ` · ${slip.position}` : ""}
+            {slip.department ? ` · ${slip.department}` : ""}
+          </span>
         </div>
-        {rows.map(([label, amount]) => (
-          <div key={label} className="flex justify-between py-1.5">
-            <span className="text-slate-300">{label}</span>
-            <span
-              className={`font-mono font-semibold ${amount < 0 ? "text-rose-300" : "text-slate-100"}`}
-            >
-              {amount < 0 ? `− ${formatIDR(-amount)}` : formatIDR(amount)}
-            </span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          {rows.map(([label, amount]) => (
+            <div key={label} style={{ display: "flex", justifyContent: "space-between", fontSize: "13.5px" }}>
+              <span className="muted">{label}</span>
+              <span className={`mono ${amount < 0 ? "neg" : ""}`} style={{ fontWeight: 600 }}>
+                {amount < 0 ? `− ${formatIDR(-amount)}` : formatIDR(amount)}
+              </span>
+            </div>
+          ))}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: "10px",
+              marginTop: "4px",
+              borderTop: "1px solid var(--line)",
+              fontWeight: 700,
+            }}
+          >
+            <span>Penghasilan Bruto</span>
+            <span className="mono">{formatIDR(slip.gross_pay)}</span>
           </div>
-        ))}
-        <div className="flex justify-between py-2 border-t border-white/10 mt-2">
-          <span className="text-slate-200 font-semibold">Penghasilan Bruto</span>
-          <span className="font-mono font-bold text-slate-100">
-            {formatIDR(slip.gross_pay)}
-          </span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: "6px",
+              paddingBottom: "10px",
+              borderBottom: "1px solid var(--line)",
+              fontWeight: 800,
+              fontSize: "15px",
+            }}
+          >
+            <span>Gaji Bersih (Take-Home)</span>
+            <span className="mono pos">{formatIDR(slip.net_pay)}</span>
+          </div>
         </div>
-        <div className="flex justify-between py-2 border-b border-white/10">
-          <span className="text-slate-200 font-semibold">Gaji Bersih (Take-Home)</span>
-          <span className="font-mono font-bold text-teal-200 text-base">
-            {formatIDR(slip.net_pay)}
-          </span>
-        </div>
-        <p className="text-xs text-slate-400 pt-3 leading-relaxed">
-          Iuran perusahaan (tidak memotong gaji): BPJS Kesehatan{" "}
-          {formatIDR(slip.bpjs_health_employer)} + BPJS Ketenagakerjaan{" "}
-          {formatIDR(slip.bpjs_employment_employer)}.
+        <p className="fin-note" style={{ marginTop: "10px" }}>
+          Iuran perusahaan (tidak memotong gaji): BPJS Kesehatan {formatIDR(slip.bpjs_health_employer)} + BPJS Ketenagakerjaan {formatIDR(slip.bpjs_employment_employer)}.
         </p>
-        <div className="flex justify-end gap-3 pt-4">
-          <GlassButton variant="ghost" onClick={onClose}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "9px", marginTop: "18px" }}>
+          <button type="button" className="btn" onClick={onClose}>
             Tutup
-          </GlassButton>
-          <GlassButton onClick={() => window.print()}>Cetak</GlassButton>
+          </button>
+          <button type="button" className="btn btn-primary" onClick={() => window.print()}>
+            Cetak
+          </button>
         </div>
       </div>
     </GlassModal>
@@ -203,27 +242,29 @@ function GenerateSlipsForm({
           overtimePay: Number(g.overtime) || 0,
           otherDeductions: Number(g.deductions) || 0,
         });
-        return { employee: e, calc: c };
+        return { employee: e, slip: c };
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [employees, inputs]
   );
 
-  const totalNet = preview.reduce((s, p) => s + p.calc.net_pay, 0);
+  const totalNet = preview.reduce((s, p) => s + p.slip.net_pay, 0);
 
   const submit = () => {
     setError(null);
-    const rows: SlipInputRow[] = employees.map((e) => {
-      const g = get(e.id);
+    const slips: SlipInputRow[] = preview.map((p) => {
+      const g = get(p.employee.id);
       return {
-        employeeId: e.id,
+        employeeId: p.employee.id,
+        baseSalary: p.employee.base_salary,
         allowances: Number(g.allowances) || 0,
         overtimePay: Number(g.overtime) || 0,
         otherDeductions: Number(g.deductions) || 0,
+        notes: `Gaji ${p.employee.position ?? "Staf"}`,
       };
     });
+
     startTransition(async () => {
-      const res = await generatePayrollSlips({ periodId, rows });
+      const res = await generatePayrollSlips({ periodId, rows: slips });
       if (!res.ok) {
         setError(res.error);
         return;
@@ -232,83 +273,102 @@ function GenerateSlipsForm({
     });
   };
 
-  if (employees.length === 0) {
-    return (
-      <p className="text-sm text-slate-300/80 px-1 py-4">
-        Semua karyawan aktif sudah memiliki slip pada periode ini, atau belum ada
-        karyawan aktif.
-      </p>
-    );
-  }
-
   return (
     <div>
-      <p className="text-sm text-slate-300/90 mb-4">
-        Isi tunjangan, lembur, dan potongan lainnya per karyawan, lalu generate
-        slip. BPJS, PPh 21 TER, dan akrual THR dihitung otomatis dari gaji pokok.
-      </p>
-      <div className="glass rounded-2xl mb-4">
-        <div className="tbl-wrap">
-          <table className="w-full text-sm min-w-[760px]">
-            <thead>
-              <tr className="text-left text-slate-300/80 border-b border-white/10">
-                <th className="px-4 py-3 font-semibold">Karyawan</th>
-                <th className="px-4 py-3 font-semibold">Tunjangan (Rp)</th>
-                <th className="px-4 py-3 font-semibold">Lembur (Rp)</th>
-                <th className="px-4 py-3 font-semibold">Pot. Lain (Rp)</th>
-                <th className="px-4 py-3 font-semibold text-right">Pratinjau Bersih</th>
+      <div className="tbl-wrap" style={{ marginBottom: "14px" }}>
+        <table className="tbl">
+          <thead>
+            <tr>
+              <th>Karyawan</th>
+              <th className="num">Gaji Pokok</th>
+              <th style={{ width: "130px" }}>Tunjangan</th>
+              <th style={{ width: "130px" }}>Lembur</th>
+              <th style={{ width: "130px" }}>Potongan Lain</th>
+              <th className="num">PPh 21 (TER)</th>
+              <th className="num">Gaji Bersih</th>
+            </tr>
+          </thead>
+          <tbody>
+            {preview.map(({ employee: e, slip }) => (
+              <tr key={e.id}>
+                <td>
+                  <b>{e.full_name}</b>
+                  <span className="mono small muted" style={{ display: "block" }}>
+                    {e.employee_code} · {e.position ?? "Staf"}
+                  </span>
+                </td>
+                <td className="num">{formatIDR(e.base_salary)}</td>
+                <td>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="0"
+                    value={get(e.id).allowances}
+                    onChange={(ev) => set(e.id, { allowances: ev.target.value })}
+                    className="select"
+                    style={{ height: "34px", width: "100%", padding: "0 8px" }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="0"
+                    value={get(e.id).overtime}
+                    onChange={(ev) => set(e.id, { overtime: ev.target.value })}
+                    className="select"
+                    style={{ height: "34px", width: "100%", padding: "0 8px" }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="0"
+                    value={get(e.id).deductions}
+                    onChange={(ev) => set(e.id, { deductions: ev.target.value })}
+                    className="select"
+                    style={{ height: "34px", width: "100%", padding: "0 8px" }}
+                  />
+                </td>
+                <td className="num">{formatIDR(slip.pph21_ter)}</td>
+                <td className="num pos" style={{ fontWeight: 700 }}>
+                  {formatIDR(slip.net_pay)}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {preview.map(({ employee: e, calc }) => (
-                <tr
-                  key={e.id}
-                  className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                >
-                  <td className="px-4 py-3">
-                    <span className="font-semibold text-slate-100">{e.full_name}</span>
-                    <div className="text-xs text-slate-400">
-                      Pokok {formatIDR(e.base_salary)}
-                    </div>
-                  </td>
-                  {(["allowances", "overtime", "deductions"] as const).map((k) => (
-                    <td key={k} className="px-4 py-3">
-                      <input
-                        type="number"
-                        min={0}
-                        value={get(e.id)[k]}
-                        onChange={(ev) => set(e.id, { [k]: ev.target.value })}
-                        placeholder="0"
-                        aria-label={`${k} untuk ${e.full_name}`}
-                        className="glass-input w-full min-h-[44px] px-3 rounded-xl text-sm font-mono"
-                      />
-                    </td>
-                  ))}
-                  <td className="px-4 py-3 text-right font-mono font-bold text-teal-200">
-                    {formatIDR(calc.net_pay)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
+
       {error && (
-        <p className="text-sm text-rose-300 bg-rose-500/10 border border-rose-300/30 rounded-xl px-4 py-2.5 mb-4">
+        <p
+          role="alert"
+          style={{
+            fontSize: "13px",
+            color: "var(--danger)",
+            background: "var(--danger-soft)",
+            border: "1px solid var(--danger)",
+            borderRadius: "9px",
+            padding: "10px 14px",
+            marginBottom: "12px",
+          }}
+        >
           {error}
         </p>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <p className="text-sm text-slate-300">
-          Total gaji bersih:{" "}
-          <span className="font-bold text-slate-100 font-mono">
-            {formatIDR(totalNet)}
-          </span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
+        <p style={{ margin: 0, fontSize: "13.5px" }}>
+          Total Gaji Bersih: <b className="pos mono">{formatIDR(totalNet)}</b>
         </p>
-        <div className="flex-1" />
-        <GlassButton onClick={submit} disabled={pending}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={submit}
+          disabled={pending}
+        >
           {pending ? "Menghitung…" : `Generate ${preview.length} Slip`}
-        </GlassButton>
+        </button>
       </div>
     </div>
   );
@@ -384,167 +444,197 @@ export function PayrollClient({
   }, [slips]);
 
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-        <nav aria-label="Pilih periode" className="flex gap-2 overflow-x-auto pb-1">
+    <div className="fin-view on">
+      {/* Subtabs periode penggajian */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px", flexWrap: "wrap" }}>
+        <div className="subtabs" style={{ marginBottom: 0, flex: 1, minWidth: "260px" }}>
           {periods.map((p) => {
             const isActive = selectedPeriod?.id === p.id;
             return (
               <button
                 key={p.id}
                 onClick={() => selectPeriod(p.id)}
-                aria-current={isActive ? "page" : undefined}
-                className={`shrink-0 min-h-[44px] inline-flex items-center px-4 rounded-xl text-sm font-semibold transition-all duration-200 border ${
-                  isActive
-                    ? "bg-teal-400/90 text-slate-950 border-teal-200/60"
-                    : "glass text-slate-200 border-white/25 hover:bg-white/15"
-                }`}
+                className={`subtab ${isActive ? "active" : ""}`}
               >
                 {p.name}
               </button>
             );
           })}
-        </nav>
-        <div className="flex-1" />
-        <GlassButton onClick={() => setShowBuat(true)}>
-          + Buat Periode
-        </GlassButton>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => setShowBuat(true)}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Buat Periode
+        </button>
       </div>
 
       {error && (
-        <p className="text-sm text-rose-300 bg-rose-500/10 border border-rose-300/30 rounded-xl px-4 py-2.5 mb-4">
+        <p
+          role="alert"
+          style={{
+            fontSize: "13px",
+            color: "var(--danger)",
+            background: "var(--danger-soft)",
+            border: "1px solid var(--danger)",
+            borderRadius: "9px",
+            padding: "10px 14px",
+            marginBottom: "14px",
+          }}
+        >
           {error}
         </p>
       )}
 
       {!selectedPeriod && (
-        <GlassCard className="p-10 text-center text-slate-300/80 text-sm">
-          Belum ada periode penggajian. Klik “Buat Periode” untuk memulai.
-        </GlassCard>
+        <div className="card">
+          <div className="empty-note">
+            Belum ada periode penggajian. Klik &quot;Buat Periode&quot; untuk memulai.
+          </div>
+        </div>
       )}
 
       {selectedPeriod && (
-        <div>
-          <GlassCard className="p-5 mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-100">
-                {selectedPeriod.name}
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {formatTanggal(selectedPeriod.start_date)} —{" "}
-                {formatTanggal(selectedPeriod.end_date)}
-              </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="card">
+            <div className="card-head">
+              <div>
+                <h3>{selectedPeriod.name}</h3>
+                <p>
+                  Periode {formatTanggal(selectedPeriod.start_date)} s/d {formatTanggal(selectedPeriod.end_date)}
+                </p>
+              </div>
+              <div className="spacer" />
+              <span
+                className={`badge ${
+                  selectedPeriod.status === "paid"
+                    ? "b-green"
+                    : selectedPeriod.status === "finalized"
+                    ? "b-blue"
+                    : "b-amber"
+                }`}
+              >
+                <i />
+                {PAYROLL_STATUS_LABEL[selectedPeriod.status as PayrollPeriodStatus]}
+              </span>
+              {selectedPeriod.status === "draft" && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary"
+                  disabled={working || slips.length === 0}
+                  onClick={() =>
+                    runAction(
+                      finalizePayrollPeriod,
+                      "Finalisasi periode? Slip tidak dapat diubah setelah final."
+                    )
+                  }
+                >
+                  {working ? "Memproses…" : "Finalisasi Periode"}
+                </button>
+              )}
+              {selectedPeriod.status === "finalized" && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary"
+                  disabled={working}
+                  onClick={() =>
+                    runAction(markPayrollPaid, "Tandai periode ini sudah dibayar?")
+                  }
+                >
+                  {working ? "Memproses…" : "Tandai Dibayar"}
+                </button>
+              )}
             </div>
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border self-start sm:self-center ${PAYROLL_STATUS_STYLE[selectedPeriod.status as PayrollPeriodStatus]}`}
-            >
-              {PAYROLL_STATUS_LABEL[selectedPeriod.status as PayrollPeriodStatus]}
-            </span>
-            <div className="flex-1" />
-            {selectedPeriod.status === "draft" && (
-              <GlassButton
-                variant="ghost"
-                disabled={working || slips.length === 0}
-                onClick={() =>
-                  runAction(
-                    finalizePayrollPeriod,
-                    "Finalisasi periode? Slip tidak dapat diubah setelah final."
-                  )
-                }
-              >
-                {working ? "Memproses…" : "Finalisasi Periode"}
-              </GlassButton>
-            )}
-            {selectedPeriod.status === "finalized" && (
-              <GlassButton
-                disabled={working}
-                onClick={() =>
-                  runAction(markPayrollPaid, "Tandai periode ini sudah dibayar?")
-                }
-              >
-                {working ? "Memproses…" : "Tandai Dibayar"}
-              </GlassButton>
-            )}
-          </GlassCard>
+          </div>
 
           {selectedPeriod.status === "draft" && withoutSlips.length > 0 && (
-            <GlassCard className="p-5 mb-4">
-              <h3 className="font-bold text-slate-100 mb-3">Generate Slip Gaji</h3>
-              <GenerateSlipsForm periodId={selectedPeriod.id} employees={withoutSlips} />
-            </GlassCard>
+            <div className="card">
+              <div className="card-head">
+                <div>
+                  <h3>Generate Slip Gaji</h3>
+                  <p>{withoutSlips.length} karyawan belum memiliki slip</p>
+                </div>
+              </div>
+              <div className="card-pad">
+                <GenerateSlipsForm periodId={selectedPeriod.id} employees={withoutSlips} />
+              </div>
+            </div>
           )}
 
           {slips.length > 0 && (
-            <div>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                {[
-                  ["Total Bruto", totals.gross],
-                  ["Total Bersih", totals.net],
-                  ["Total PPh 21", totals.pph21],
-                  ["Total BPJS Perusahaan", totals.bpjsEmployer],
-                ].map(([label, val]) => (
-                  <GlassCard key={label as string} className="p-4">
-                    <p className="text-xs text-slate-400">{label as string}</p>
-                    <p className="font-mono font-bold text-slate-100 mt-1">
-                      {formatIDR(val as number)}
-                    </p>
-                  </GlassCard>
-                ))}
+            <>
+              <div className="stats-grid">
+                <div className="card stat">
+                  <div className="s-label">Total Gaji Bruto</div>
+                  <div className="s-value">{formatIDR(totals.gross)}</div>
+                  <div className="s-foot">{slips.length} slip gaji</div>
+                </div>
+                <div className="card stat">
+                  <div className="s-label">Total Bersih (Take Home)</div>
+                  <div className="s-value pos">{formatIDR(totals.net)}</div>
+                  <div className="s-foot">Ditransfer ke karyawan</div>
+                </div>
+                <div className="card stat">
+                  <div className="s-label">Total PPh 21 (TER)</div>
+                  <div className="s-value">{formatIDR(totals.pph21)}</div>
+                  <div className="s-foot">Disetor ke kas negara</div>
+                </div>
+                <div className="card stat">
+                  <div className="s-label">Total BPJS Perusahaan</div>
+                  <div className="s-value">{formatIDR(totals.bpjsEmployer)}</div>
+                  <div className="s-foot">Beban operasional</div>
+                </div>
               </div>
 
-              <div className="glass rounded-2xl">
+              <div className="card">
+                <div className="card-head">
+                  <div>
+                    <h3>Rincian Slip Gaji Karyawan</h3>
+                    <p>{slips.length} slip gaji terdaftar pada periode ini</p>
+                  </div>
+                </div>
                 <div className="tbl-wrap">
-                  <table className="w-full text-sm min-w-[880px]">
+                  <table className="tbl">
                     <thead>
-                      <tr className="text-left text-slate-300/80 border-b border-white/10">
-                        <th className="px-4 py-3 font-semibold">Karyawan</th>
-                        <th className="px-4 py-3 font-semibold text-right">Gaji Pokok</th>
-                        <th className="px-4 py-3 font-semibold text-right">Tunjangan</th>
-                        <th className="px-4 py-3 font-semibold text-right">BPJS Kry.</th>
-                        <th className="px-4 py-3 font-semibold text-right">PPh 21</th>
-                        <th className="px-4 py-3 font-semibold text-right">THR Akrual</th>
-                        <th className="px-4 py-3 font-semibold text-right">Bersih</th>
-                        <th className="px-4 py-3 font-semibold text-right">Aksi</th>
+                      <tr>
+                        <th>Karyawan</th>
+                        <th className="num">Gaji Pokok</th>
+                        <th className="num">Tunjangan</th>
+                        <th className="num">BPJS Kry.</th>
+                        <th className="num">PPh 21</th>
+                        <th className="num">THR Akrual</th>
+                        <th className="num">Bersih</th>
+                        <th style={{ width: "110px", textAlign: "right" }}>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       {slips.map((s) => (
-                        <tr
-                          key={s.id}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="px-4 py-3">
-                            <span className="font-semibold text-slate-100">
-                              {s.employee_name}
-                            </span>
-                            <div className="text-xs text-slate-400">
+                        <tr key={s.id}>
+                          <td>
+                            <b>{s.employee_name}</b>
+                            <span className="mono small muted" style={{ display: "block" }}>
                               {s.employee_code}
-                            </div>
+                            </span>
                           </td>
-                          <td className="px-4 py-3 text-right font-mono text-slate-200">
-                            {formatIDR(s.base_salary)}
+                          <td className="num">{formatIDR(s.base_salary)}</td>
+                          <td className="num">{formatIDR(s.allowances + s.overtime_pay)}</td>
+                          <td className="num">
+                            {formatIDR(s.bpjs_health_employee + s.bpjs_employment_employee)}
                           </td>
-                          <td className="px-4 py-3 text-right font-mono text-slate-200">
-                            {formatIDR(s.allowances + s.overtime_pay)}
-                          </td>
-                          <td className="px-4 py-3 text-right font-mono text-slate-200">
-                            {formatIDR(
-                              s.bpjs_health_employee + s.bpjs_employment_employee
-                            )}
-                          </td>
-                          <td className="px-4 py-3 text-right font-mono text-slate-200">
-                            {formatIDR(s.pph21_ter)}
-                          </td>
-                          <td className="px-4 py-3 text-right font-mono text-slate-200">
-                            {formatIDR(s.thr_accrual)}
-                          </td>
-                          <td className="px-4 py-3 text-right font-mono font-bold text-teal-200">
+                          <td className="num">{formatIDR(s.pph21_ter)}</td>
+                          <td className="num">{formatIDR(s.thr_accrual)}</td>
+                          <td className="num pos" style={{ fontWeight: 700 }}>
                             {formatIDR(s.net_pay)}
                           </td>
-                          <td className="px-4 py-3 text-right">
+                          <td style={{ textAlign: "right" }}>
                             <button
+                              type="button"
                               onClick={() => setSlipModal(s)}
-                              className="min-h-[44px] px-3 rounded-xl text-xs font-bold glass text-slate-100 hover:bg-white/15 border border-white/25 transition-all"
+                              className="btn btn-sm"
                             >
                               Lihat Slip
                             </button>
@@ -555,13 +645,13 @@ export function PayrollClient({
                   </table>
                 </div>
               </div>
-            </div>
+            </>
           )}
 
           {slips.length === 0 && selectedPeriod.status !== "draft" && (
-            <GlassCard className="p-10 text-center text-slate-300/80 text-sm">
-              Periode ini belum memiliki slip gaji.
-            </GlassCard>
+            <div className="card">
+              <div className="empty-note">Periode ini belum memiliki slip gaji.</div>
+            </div>
           )}
         </div>
       )}

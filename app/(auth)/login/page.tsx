@@ -3,9 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,47 +35,75 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
-      <GlassCard strong className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <p className="text-3xl font-extrabold tracking-tight text-slate-100">
+    <main className="min-h-screen flex items-center justify-center p-4 relative z-10">
+      <div className="card glass-strong w-full max-w-md p-8" style={{ backdropFilter: "var(--blur)" }}>
+        <div className="mb-8 text-center flex flex-col items-center">
+          <div className="brand-mark mb-3" style={{ width: 48, height: 48, fontSize: 18 }}>
             ERP
-          </p>
-          <p className="text-sm text-slate-300/80 mt-2">
-            Masuk untuk mengelola perusahaan Anda
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-white m-0">
+            PT Maju Bersama
+          </h1>
+          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
+            Masuk untuk mengakses sistem ERP terpadu
           </p>
         </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <GlassInput
-            id="email"
-            label="Email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="nama@perusahaan.id"
-          />
-          <GlassInput
-            id="password"
-            label="Kata sandi"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-          />
+          <div className="field">
+            <label htmlFor="email">Alamat Email</label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@perusahaan.co.id"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="password">Kata Sandi</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+          </div>
+
           {error && (
-            <p role="alert" className="text-sm text-rose-300 font-medium">
+            <div
+              role="alert"
+              className="text-sm p-3 rounded-lg border font-medium"
+              style={{
+                background: "var(--danger-soft)",
+                borderColor: "rgba(255, 122, 102, 0.35)",
+                color: "var(--danger)",
+              }}
+            >
               {error}
-            </p>
+            </div>
           )}
-          <GlassButton type="submit" disabled={loading} className="w-full">
-            {loading ? "Memproses…" : "Masuk"}
-          </GlassButton>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary w-full"
+            style={{ height: 44, fontSize: 14, marginTop: 12 }}
+          >
+            {loading ? "Memproses…" : "Masuk ke Sistem"}
+          </button>
         </form>
-      </GlassCard>
+
+        <div className="mt-6 pt-4 text-center border-t text-xs" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
+          Tahun buku 2026 · Hak Akses Internal Terproteksi
+        </div>
+      </div>
     </main>
   );
 }

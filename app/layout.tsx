@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -8,9 +8,15 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "ERP",
-  description: "Sistem ERP untuk perusahaan Indonesia",
+  title: "ERP — PT Maju Bersama",
+  description: "Sistem ERP — aplikasi web single-tenant untuk perusahaan umum di Indonesia",
 };
 
 export default function RootLayout({
@@ -19,9 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={jakarta.variable}>
-      <body className="font-sans">
-        <div className="aurora-bg" aria-hidden="true" />
+    <html lang="id" className={`${jakarta.variable} ${jetbrainsMono.variable}`}>
+      <body>
+        <div className="aurora" aria-hidden="true">
+          <div className="orb o1" />
+          <div className="orb o2" />
+          <div className="orb o3" />
+          <div className="orb o4" />
+        </div>
         {children}
       </body>
     </html>

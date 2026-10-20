@@ -1,17 +1,14 @@
 import Link from "next/link";
 
 const TABS = [
-  { key: "produk", label: "Produk" },
+  { key: "produk", label: "Master Produk" },
+  { key: "gudang", label: "Daftar Gudang" },
   { key: "kartu-stok", label: "Kartu Stok" },
-  { key: "gudang", label: "Gudang" },
 ] as const;
 
 export function InventarisTabs({ active }: { active: string }) {
   return (
-    <nav
-      aria-label="Navigasi modul inventaris"
-      className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1"
-    >
+    <nav aria-label="Navigasi modul inventaris" className="subtabs">
       {TABS.map((t) => {
         const isActive = active === t.key;
         return (
@@ -19,11 +16,7 @@ export function InventarisTabs({ active }: { active: string }) {
             key={t.key}
             href={t.key === "produk" ? "/inventaris" : `/inventaris?tab=${t.key}`}
             aria-current={isActive ? "page" : undefined}
-            className={`shrink-0 min-h-[44px] inline-flex items-center px-4 rounded-xl text-sm font-semibold transition-all duration-200 border ${
-              isActive
-                ? "bg-teal-400/90 text-slate-950 border-teal-200/60 shadow-[0_8px_24px_rgba(45,212,191,0.35)]"
-                : "glass text-slate-200 border-white/25 hover:bg-white/15"
-            }`}
+            className={`subtab ${isActive ? "active" : ""}`}
           >
             {t.label}
           </Link>

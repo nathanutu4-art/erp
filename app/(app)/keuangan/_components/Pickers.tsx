@@ -15,10 +15,10 @@ export function PeriodePicker({
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <div>
-      <span className="block text-sm font-medium text-slate-200 mb-1.5">
-        {label}
-      </span>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+      <label style={{ fontSize: "13px", fontWeight: 700, color: "var(--ink-2)" }}>
+        {label}:
+      </label>
       <input
         type="month"
         aria-label={label}
@@ -28,7 +28,8 @@ export function PeriodePicker({
             router.replace(`${pathname}?tab=${tab}&periode=${e.target.value}`);
           }
         }}
-        className="glass-input min-h-[44px] px-4 rounded-xl text-sm"
+        className="select"
+        style={{ height: "37px", padding: "0 10px" }}
       />
     </div>
   );
@@ -45,22 +46,21 @@ export function TanggalPicker({
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <div>
-      <span className="block text-sm font-medium text-slate-200 mb-1.5">
-        {label}
-      </span>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+      <label style={{ fontSize: "13px", fontWeight: 700, color: "var(--ink-2)" }}>
+        {label}:
+      </label>
       <input
         type="date"
         aria-label={label}
         value={value}
         onChange={(e) => {
           if (e.target.value) {
-            router.replace(
-              `${pathname}?tab=neraca&tanggal=${e.target.value}`
-            );
+            router.replace(`${pathname}?tab=neraca&tanggal=${e.target.value}`);
           }
         }}
-        className="glass-input min-h-[44px] px-4 rounded-xl text-sm"
+        className="select"
+        style={{ height: "37px", padding: "0 10px" }}
       />
     </div>
   );

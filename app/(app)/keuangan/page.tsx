@@ -490,18 +490,9 @@ export default async function KeuanganPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">
-          Keuangan & Akuntansi
-        </h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Bagan akun, jurnal umum, buku besar, dan laporan keuangan.
-        </p>
-      </div>
-
       <KeuanganTabs active={tab} />
 
-      <div className="mt-6">
+      <div>
         {tab === "bagan-akun" && <BaganAkunTab />}
         {tab === "jurnal" && (
           <JurnalTab q={params.q ?? ""} status={params.status ?? "semua"} />

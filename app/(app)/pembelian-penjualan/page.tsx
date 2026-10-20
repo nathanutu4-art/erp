@@ -230,19 +230,9 @@ export default async function PembelianPenjualanPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">
-          Pembelian &amp; Penjualan
-        </h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Purchase order beserta alur persetujuan, invoice penjualan dengan
-          nomor Faktur Pajak, surat jalan, dan ekspor e-Faktur.
-        </p>
-      </div>
-
       <PembelianPenjualanTabs active={tab} />
 
-      <div className="mt-6">
+      <div>
         {tab === "po" && <PoTab />}
         {tab === "invoice" && <InvoiceTab />}
         {tab === "surat-jalan" && <SuratJalanTab />}

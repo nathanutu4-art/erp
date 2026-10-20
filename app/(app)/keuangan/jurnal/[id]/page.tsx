@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { createClient } from "@/lib/supabase/server";
 import { formatIDR, formatTanggal } from "@/lib/format";
 import {
   toNumber,
   one,
   STATUS_LABEL,
-  STATUS_STYLE,
   type JournalStatus,
 } from "../../_lib/finance";
 import { JurnalDetailActions } from "../../_components/JurnalDetailActions";
@@ -66,109 +64,140 @@ export default async function JurnalDetailPage({
     Math.round(totalDebit * 100) === Math.round(totalCredit * 100);
 
   return (
-    <div>
+    <div className="fin-view on">
       <Link
         href="/keuangan?tab=jurnal"
-        className="inline-flex items-center min-h-[44px] text-sm font-semibold text-teal-200 hover:text-teal-100 mb-4"
+        className="btn btn-sm"
+        style={{ marginBottom: "14px", display: "inline-flex", textDecoration: "none" }}
       >
-        ← Kembali ke Jurnal Umum
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M19 12H5" />
+          <path d="m12 19-7-7 7-7" />
+        </svg>
+        Kembali ke Jurnal Umum
       </Link>
 
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-100 font-mono">
-            {entry.entry_number}
-          </h1>
-          <p className="text-sm text-slate-300/80 mt-1">{entry.description}</p>
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>
+              {entry.entry_number} — {entry.description}
+            </h3>
+            <p>
+              Tanggal: {formatTanggal(entry.entry_date)} · Status: {STATUS_LABEL[entry.status] ?? entry.status}
+            </p>
+          </div>
+          <div className="spacer" />
+          <span
+            className={`badge ${
+              entry.status === "posted"
+                ? "b-green"
+                : entry.status === "void"
+                ? "b-red"
+                : "b-amber"
+            }`}
+          >
+            <i />
+            {STATUS_LABEL[entry.status] ?? entry.status}
+          </span>
         </div>
-        <span
-          className={`inline-flex items-center min-h-[44px] text-xs font-bold rounded-full px-4 border ${STATUS_STYLE[entry.status] ?? STATUS_STYLE.draft}`}
-        >
-          {STATUS_LABEL[entry.status] ?? entry.status}
-        </span>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <GlassCard className="p-4">
-          <p className="text-xs text-slate-300/70">Tanggal</p>
-          <p className="text-sm font-bold text-slate-100 mt-1">
-            {formatTanggal(entry.entry_date)}
-          </p>
-        </GlassCard>
-        <GlassCard className="p-4">
-          <p className="text-xs text-slate-300/70">Sumber</p>
-          <p className="text-sm font-bold text-slate-100 mt-1 capitalize">
-            {entry.reference_type ?? "—"}
-          </p>
-        </GlassCard>
-        <GlassCard className="p-4">
-          <p className="text-xs text-slate-300/70">Dibukukan pada</p>
-          <p className="text-sm font-bold text-slate-100 mt-1">
-            {entry.posted_at ? formatTanggal(entry.posted_at) : "—"}
-          </p>
-        </GlassCard>
-      </div>
-
-      <GlassCard className="p-2 sm:p-4 mb-6">
         <div className="tbl-wrap">
-          <table className="min-w-[640px]">
+          <table className="tbl">
             <thead>
               <tr>
-                <th>Kode</th>
+                <th style={{ width: "110px" }}>Kode</th>
                 <th>Akun</th>
-                <th>Keterangan Baris</th>
-                <th className="!text-right">Debit</th>
-                <th className="!text-right">Kredit</th>
+                <th className="num" style={{ width: "160px" }}>Debit</th>
+                <th className="num" style={{ width: "160px" }}>Kredit</th>
               </tr>
             </thead>
             <tbody>
-              {lines.map((l) => (
-                <tr key={l.id}>
-                  <td className="font-mono font-semibold whitespace-nowrap">
-                    {l.account?.code ?? "—"}
-                  </td>
-                  <td className="!whitespace-normal min-w-[160px]">
-                    {l.account?.name ?? "—"}
-                  </td>
-                  <td className="!whitespace-normal min-w-[140px] text-slate-300/80">
-                    {l.description ?? "—"}
-                  </td>
-                  <td className="!text-right whitespace-nowrap">
-                    {toNumber(l.debit) > 0 ? formatIDR(toNumber(l.debit)) : "—"}
-                  </td>
-                  <td className="!text-right whitespace-nowrap">
-                    {toNumber(l.credit) > 0 ? formatIDR(toNumber(l.credit)) : "—"}
-                  </td>
-                </tr>
-              ))}
+              {lines.map((l) => {
+                const isCredit = toNumber(l.credit) > 0;
+                return (
+                  <tr key={l.id}>
+                    <td className="mono" style={{ fontWeight: 600 }}>
+                      {l.account?.code ?? "—"}
+                    </td>
+                    <td style={{ paddingLeft: isCredit ? "34px" : undefined }}>
+                      {l.account?.name ?? "—"}
+                      {l.description && (
+                        <span
+                          style={{
+                            display: "block",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                          }}
+                        >
+                          {l.description}
+                        </span>
+                      )}
+                    </td>
+                    <td className="num">
+                      {toNumber(l.debit) > 0 ? formatIDR(toNumber(l.debit)) : "—"}
+                    </td>
+                    <td className="num">
+                      {toNumber(l.credit) > 0 ? formatIDR(toNumber(l.credit)) : "—"}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
-              <tr className="border-t border-white/20 font-bold">
-                <td colSpan={3}>Total</td>
-                <td className="!text-right whitespace-nowrap">
-                  {formatIDR(totalDebit)}
-                </td>
-                <td className="!text-right whitespace-nowrap">
-                  {formatIDR(totalCredit)}
-                </td>
+              <tr>
+                <td colSpan={2}>Total</td>
+                <td className="num">{formatIDR(totalDebit)}</td>
+                <td className="num">{formatIDR(totalCredit)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
-        <div className="px-3 sm:px-4 py-3">
-          <span
-            className={`inline-block text-xs font-bold rounded-full px-3 py-1 border ${
-              balanced
-                ? "bg-teal-400/20 text-teal-200 border-teal-300/40"
-                : "bg-rose-500/20 text-rose-200 border-rose-300/40"
-            }`}
-          >
-            {balanced ? "✓ Seimbang" : "⚠ Tidak seimbang"}
-          </span>
-        </div>
-      </GlassCard>
 
-      <JurnalDetailActions entryId={entry.id} status={entry.status} />
+        <div
+          className="card-pad"
+          style={{
+            borderTop: "1px solid var(--line)",
+            display: "flex",
+            gap: "26px",
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <div className="small">
+            <span className="muted">Dibuat pada</span>
+            <br />
+            <b>{formatTanggal(entry.created_at)}</b>
+          </div>
+          <div className="small">
+            <span className="muted">Referensi</span>
+            <br />
+            <b>{entry.reference_type ?? "Manual"}</b>
+          </div>
+          <div className="small">
+            <span className="muted">Dibukukan pada</span>
+            <br />
+            <b>{entry.posted_at ? formatTanggal(entry.posted_at) : "—"}</b>
+          </div>
+          <div className="small">
+            <span className="muted">Keseimbangan</span>
+            <br />
+            <b className={balanced ? "pos" : "neg"}>
+              {balanced ? "Balance — selisih Rp 0" : "Tidak Seimbang!"}
+            </b>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <JurnalDetailActions entryId={entry.id} status={entry.status} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

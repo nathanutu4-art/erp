@@ -6,10 +6,19 @@ type GlassModalProps = {
   open: boolean;
   onClose: () => void;
   title: string;
+  subtitle?: string;
+  wide?: boolean;
   children: React.ReactNode;
 };
 
-export function GlassModal({ open, onClose, title, children }: GlassModalProps) {
+export function GlassModal({
+  open,
+  onClose,
+  title,
+  subtitle,
+  wide = false,
+  children,
+}: GlassModalProps) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -23,28 +32,31 @@ export function GlassModal({ open, onClose, title, children }: GlassModalProps) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center md:items-center p-0 md:p-6"
+      className="overlay open"
       role="dialog"
       aria-modal="true"
       aria-label={title}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <button
-        aria-label="Tutup"
-        onClick={onClose}
-        className="absolute inset-0 bg-slate-950/60 backdrop-blur-md cursor-default"
-      />
-      <div className="glass-strong relative w-full md:max-w-lg rounded-t-3xl md:rounded-3xl p-6 max-h-[92vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-slate-100">{title}</h2>
+      <div className={`modal ${wide ? "wide" : ""}`}>
+        <div className="modal-head">
+          <div>
+            <h3>{title}</h3>
+            {subtitle && <p>{subtitle}</p>}
+          </div>
+          <div className="spacer" />
           <button
+            type="button"
+            className="icon-btn"
             onClick={onClose}
             aria-label="Tutup dialog"
-            className="glass min-w-[44px] min-h-[44px] rounded-xl text-slate-200 hover:bg-white/15 transition-colors font-bold"
           >
             ✕
           </button>
         </div>
-        {children}
+        <div className="modal-body">{children}</div>
       </div>
     </div>
   );

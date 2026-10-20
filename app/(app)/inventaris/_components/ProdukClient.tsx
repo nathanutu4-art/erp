@@ -778,157 +778,174 @@ export function ProdukClient({
   const canMoveStock = productOptions.length > 0 && warehouses.length > 0;
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 mb-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 min-w-0">
-            <GlassInput
-              id="cari-produk"
-              label="Cari Produk"
-              placeholder="SKU atau nama produk…"
+    <div className="fin-view on">
+      <div className="card">
+        <div className="card-head">
+          <div>
+            <h3>Master Produk &amp; Stok</h3>
+            <p>
+              Menampilkan {filtered.length} dari {products.length} produk terdaftar
+            </p>
+          </div>
+          <div className="spacer" />
+          <div className="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Cari SKU atau nama produk…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="sm:w-56">
-            <span className="block text-sm font-medium text-slate-200 mb-1.5">
-              Kategori
-            </span>
-            <select
-              aria-label="Filter kategori"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="glass-input w-full min-h-[44px] px-4 rounded-xl text-sm"
-            >
-              <option value="semua" className="text-slate-900">
-                Semua kategori
+          <select
+            aria-label="Filter kategori"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="select"
+          >
+            <option value="semua">Semua Kategori</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
               </option>
-              {categories.map((c) => (
-                <option key={c} value={c} className="text-slate-900">
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <GlassButton onClick={() => setShowTambah(true)}>
-            + Tambah Produk
-          </GlassButton>
-          <GlassButton
-            variant="ghost"
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowTambah(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Tambah Produk
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
             onClick={() => setShowMasuk(true)}
             disabled={!canMoveStock}
-            title={
-              canMoveStock
-                ? undefined
-                : "Butuh minimal 1 produk aktif dan 1 gudang"
-            }
           >
             Stok Masuk
-          </GlassButton>
-          <GlassButton
-            variant="ghost"
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
             onClick={() => setShowKeluar(true)}
             disabled={!canMoveStock}
-            title={
-              canMoveStock
-                ? undefined
-                : "Butuh minimal 1 produk aktif dan 1 gudang"
-            }
           >
             Stok Keluar
-          </GlassButton>
-          <GlassButton
-            variant="ghost"
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
             onClick={() => setShowOpname(true)}
             disabled={!canMoveStock}
-            title={
-              canMoveStock
-                ? undefined
-                : "Butuh minimal 1 produk aktif dan 1 gudang"
-            }
           >
             Opname
-          </GlassButton>
+          </button>
         </div>
-      </div>
 
-      <GlassCard className="p-2 sm:p-4">
-        {filtered.length === 0 ? (
-          <p className="text-sm text-slate-300/70 text-center py-10 px-4">
-            {products.length === 0
-              ? "Belum ada produk. Tambahkan produk pertama Anda."
-              : "Tidak ada produk yang cocok dengan pencarian."}
-          </p>
-        ) : (
-          <div className="tbl-wrap">
-            <table className="min-w-[900px]">
-              <thead>
+        <div className="tbl-wrap">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th style={{ width: "110px" }}>SKU</th>
+                <th>Nama Produk</th>
+                <th>Kategori</th>
+                <th>Gudang</th>
+                <th className="num">Stok</th>
+                <th className="num">Stok Min</th>
+                <th className="num">HPP Average</th>
+                <th className="num">Nilai Persediaan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
                 <tr>
-                  <th>SKU</th>
-                  <th>Nama Produk</th>
-                  <th>Kategori</th>
-                  <th>Gudang</th>
-                  <th className="!text-right">Stok</th>
-                  <th className="!text-right">Stok Min</th>
-                  <th className="!text-right">HPP Average</th>
-                  <th className="!text-right">Nilai Persediaan</th>
+                  <td colSpan={8}>
+                    <div className="empty-note">
+                      {products.length === 0
+                        ? "Belum ada produk. Tambahkan produk pertama Anda."
+                        : "Tidak ada produk yang cocok dengan pencarian."}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map((p) => {
+              ) : (
+                filtered.map((p) => {
                   const lowStock =
                     p.min_stock > 0 && p.current_stock <= p.min_stock;
                   return (
                     <tr key={p.id}>
-                      <td className="font-mono font-semibold">{p.sku}</td>
-                      <td className="!whitespace-normal min-w-[180px]">
+                      <td className="mono" style={{ fontWeight: 600 }}>
+                        {p.sku}
+                      </td>
+                      <td>
                         {p.name}
                         {!p.is_active && (
-                          <span className="ml-2 inline-block text-[11px] font-semibold rounded-full px-2 py-0.5 border bg-slate-400/20 text-slate-300 border-slate-300/40">
+                          <span
+                            className="badge b-gray"
+                            style={{ marginLeft: "8px", fontSize: "10.5px", padding: "1px 7px" }}
+                          >
                             Nonaktif
                           </span>
                         )}
                       </td>
-                      <td className="text-slate-300/80">
+                      <td style={{ color: "var(--ink-2)" }}>
                         {p.category || "—"}
                       </td>
-                      <td className="text-slate-300/80">
+                      <td style={{ color: "var(--ink-2)" }}>
                         {p.latestWarehouseCode
                           ? `${p.latestWarehouseCode} — ${p.latestWarehouseName ?? ""}`
                           : "—"}
                       </td>
-                      <td className="!text-right font-semibold">
+                      <td className="num" style={{ fontWeight: 700 }}>
                         {formatQty(p.current_stock)}{" "}
-                        <span className="font-normal text-slate-300/70">
+                        <span className="muted" style={{ fontWeight: 400 }}>
                           {p.unit}
                         </span>
                         {lowStock && (
-                          <span className="ml-2 inline-block text-[11px] font-semibold rounded-full px-2 py-0.5 border bg-amber-400/20 text-amber-200 border-amber-300/40">
+                          <span
+                            className="badge b-amber"
+                            style={{ marginLeft: "8px", fontSize: "10.5px", padding: "1px 7px" }}
+                          >
                             Stok Menipis
                           </span>
                         )}
                       </td>
-                      <td className="!text-right text-slate-300/80">
+                      <td className="num">
                         {formatQty(p.min_stock)} {p.unit}
                       </td>
-                      <td className="!text-right">{formatIDR2(p.avg_cost)}</td>
-                      <td className="!text-right font-semibold">
+                      <td className="num">{formatIDR2(p.avg_cost)}</td>
+                      <td className="num" style={{ fontWeight: 700 }}>
                         {formatIDR(p.current_stock * p.avg_cost)}
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </GlassCard>
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <p className="text-xs text-slate-400/70 mt-3">
-        Kolom “Gudang” menunjukkan gudang mutasi terakhir tiap produk. Stok
-        adalah total seluruh gudang; HPP memakai metode Average (D6).
+      <p className="fin-note">
+        Kolom &quot;Gudang&quot; menunjukkan gudang mutasi terakhir tiap produk. Stok adalah total seluruh gudang; HPP memakai metode Average.
       </p>
 
       {showTambah && (

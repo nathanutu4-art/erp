@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 const TABS = [
-  { key: "po", label: "Purchase Order" },
-  { key: "invoice", label: "Invoice Penjualan" },
+  { key: "po", label: "Pesanan Pembelian (PO)" },
+  { key: "invoice", label: "Faktur Penjualan" },
   { key: "surat-jalan", label: "Surat Jalan" },
 ] as const;
 
@@ -10,7 +10,7 @@ export function PembelianPenjualanTabs({ active }: { active: string }) {
   return (
     <nav
       aria-label="Navigasi modul pembelian dan penjualan"
-      className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1"
+      className="subtabs"
     >
       {TABS.map((t) => {
         const isActive = active === t.key;
@@ -23,11 +23,7 @@ export function PembelianPenjualanTabs({ active }: { active: string }) {
                 : `/pembelian-penjualan?tab=${t.key}`
             }
             aria-current={isActive ? "page" : undefined}
-            className={`shrink-0 min-h-[44px] inline-flex items-center px-4 rounded-xl text-sm font-semibold transition-all duration-200 border ${
-              isActive
-                ? "bg-teal-400/90 text-slate-950 border-teal-200/60 shadow-[0_8px_24px_rgba(45,212,191,0.35)]"
-                : "glass text-slate-200 border-white/25 hover:bg-white/15"
-            }`}
+            className={`subtab ${isActive ? "active" : ""}`}
           >
             {t.label}
           </Link>

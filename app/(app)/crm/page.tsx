@@ -83,12 +83,6 @@ export default async function CrmPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">CRM</h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Data pelanggan, riwayat transaksi, dan pantauan piutang.
-        </p>
-      </div>
       <CrmClient customers={customers} />
     </div>
   );

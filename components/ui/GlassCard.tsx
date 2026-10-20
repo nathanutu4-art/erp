@@ -7,7 +7,7 @@ type GlassCardProps = HTMLAttributes<HTMLDivElement> & {
 export function GlassCard({ strong, className = "", ...props }: GlassCardProps) {
   return (
     <div
-      className={`${strong ? "glass-strong" : "glass"} rounded-2xl ${className}`}
+      className={`card ${strong ? "glass-strong" : ""} ${className}`}
       {...props}
     />
   );

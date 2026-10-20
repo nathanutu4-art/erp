@@ -125,18 +125,9 @@ export default async function InventarisPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-100">
-          Inventaris & Gudang
-        </h1>
-        <p className="text-sm text-slate-300/80 mt-1">
-          Produk, mutasi stok dengan HPP average, kartu stok, dan gudang.
-        </p>
-      </div>
-
       <InventarisTabs active={tab} />
 
-      <div className="mt-6">
+      <div>
         {tab === "produk" && <ProdukTab />}
         {tab === "kartu-stok" && <KartuStokTab />}
         {tab === "gudang" && <GudangTab />}
