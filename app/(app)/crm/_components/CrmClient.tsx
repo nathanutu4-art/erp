@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN DIREKTORI PELANGGAN (CUSTOMER DIRECTORY CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan master kontak dan relasi bisnis pelanggan:
+ * 1. Tabel Pelanggan: Kode pelanggan (CUST-YYYY-NNNN), nama perusahaan/individu, kontak, plafon kredit, total piutang berjalan, dan status akun.
+ * 2. Baris Tautan: Mengklik baris pelanggan langsung membuka profil 360 derajat `/crm/[id]`.
+ * 3. Modal Tambah Pelanggan: Form registrasi klien baru dengan penetapan plafon batas kredit awal.
+ * ============================================================================
+ */
+
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/ui/DataTable";

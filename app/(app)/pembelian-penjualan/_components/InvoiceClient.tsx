@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN INVOICE PENJUALAN (SALES INVOICE CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan faktur penjualan, pelunasan pembayaran, dan kepatuhan pajak:
+ * 1. Tabel Tagihan: Nomor invoice (INV-YYYY-NNNN), pelanggan, tanggal, jatuh tempo, total tagihan, jumlah terbayar, sisa piutang, dan status bayar.
+ * 2. Pembuatan Invoice: Pemilihan barang dagang, harga jual satuan, kalkulasi otomatis DPP dan PPN 11%, serta penetapan nomor Faktur Pajak.
+ * 3. Catat Pembayaran: Modal pelunasan piutang (penuh atau cicil) dengan integrasi pembukuan kas/bank.
+ * 4. Ekspor e-Faktur: Ekspor file format CSV sesuai skema impor DJP e-Faktur.
+ * ============================================================================
+ */
+
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/ui/GlassCard";

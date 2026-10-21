@@ -1,3 +1,13 @@
+/**
+ * ============================================================================
+ * PLACEHOLDER MODUL (MODULE PLACEHOLDER)
+ * ============================================================================
+ * 
+ * Komponen hero banner pengenalan modul (`.mod-hero`):
+ * - Menampilkan ikon grafis modul, judul fitur, deskripsi bisnis, dan keterangan integrasi database.
+ * ============================================================================
+ */
+
 import { GlassCard } from "@/components/ui/GlassCard";
 
 type ModulePlaceholderProps = {

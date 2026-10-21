@@ -1,3 +1,13 @@
+/**
+ * ============================================================================
+ * SUBTABS NAVIGASI MODUL PEMBELIAN & PENJUALAN (PURCHASING & SALES TABS)
+ * ============================================================================
+ * 
+ * Bilah navigasi horizontal kaca (`.subtabs`) untuk berpindah sub-modul rantai pasok:
+ * - Pesanan Pembelian (PO) | Faktur Penjualan (Invoice) | Surat Jalan (Delivery Note)
+ * ============================================================================
+ */
+
 import Link from "next/link";
 
 const TABS = [

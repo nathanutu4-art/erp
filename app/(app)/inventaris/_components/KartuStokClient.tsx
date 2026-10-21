@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN KARTU STOK (STOCK CARD CLIENT)
+ * ============================================================================
+ * 
+ * Audit jejak mutasi historis pergerakan kuantitas dan nilai persediaan per produk:
+ * 1. Filter Produk & Gudang: Memilih barang dan lokasi gudang yang ingin diaudit.
+ * 2. Log Mutasi: Tanggal, jenis mutasi (masuk/keluar/opname), nomor referensi dokumen, kuantitas masuk, kuantitas keluar, dan saldo akhir berjalan.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { formatTanggal } from "@/lib/format";
 import {

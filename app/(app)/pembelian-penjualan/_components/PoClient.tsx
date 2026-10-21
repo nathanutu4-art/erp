@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PURCHASE ORDER (PURCHASE ORDER CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan siklus pesanan pembelian ke supplier:
+ * 1. Tabel PO: Nomor PO (PO-YYYY-NNNN), supplier, tanggal order, total nilai, status approval, dan status penerimaan barang.
+ * 2. Form Pembuatan PO: Baris item barang dinamis, kuantitas, harga beli, dan pemilihan gudang tujuan.
+ * 3. Penerimaan Barang (Goods Receipt): Pencatatan barang yang telah tiba di gudang dan otomatis mengupdate stok fisik.
+ * 4. Pratinjau Dokumen Cetak: Menampilkan PO format cetak resmi dengan kop surat perusahaan.
+ * ============================================================================
+ */
+
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/ui/GlassCard";

@@ -1,3 +1,13 @@
+/**
+ * ============================================================================
+ * SUBTABS NAVIGASI MODUL SDM & KEHADIRAN (HR TABS)
+ * ============================================================================
+ * 
+ * Bilah navigasi horizontal kaca (`.subtabs`) untuk berpindah sub-modul SDM:
+ * - Karyawan | Kehadiran | Pengajuan Cuti / Izin | Payroll
+ * ============================================================================
+ */
+
 import Link from "next/link";
 
 const TABS = [

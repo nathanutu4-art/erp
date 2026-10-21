@@ -1,3 +1,13 @@
+/**
+ * ============================================================================
+ * SUBTABS NAVIGASI MODUL KEUANGAN (FINANCE TABS)
+ * ============================================================================
+ * 
+ * Bilah navigasi horizontal kaca (`.subtabs`) untuk berpindah antar sub-modul akuntansi:
+ * - Bagan Akun | Jurnal Umum | Buku Besar | Laba Rugi | Neraca | Arus Kas
+ * ============================================================================
+ */
+
 import Link from "next/link";
 
 const TABS = [

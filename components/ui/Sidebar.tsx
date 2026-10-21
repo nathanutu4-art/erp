@@ -1,5 +1,22 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN SIDEBAR NAVIGASI UTAMA (SIDEBAR NAVIGATION)
+ * ============================================================================
+ * 
+ * Bilah navigasi vertikal yang menampilkan:
+ * 1. Brand Identitas: Logo inisial 2 huruf dan nama perusahaan yang tersinkronisasi
+ *    secara dinamis dari tabel `companies` di Supabase.
+ * 2. Kelompok Menu (NAV_GROUPS):
+ *    - Utama: Dashboard, Keuangan & Akuntansi
+ *    - Operasional: SDM & Kehadiran, Inventaris & Gudang, Pembelian & Penjualan, CRM, Aset Tetap
+ *    - Sistem: Pengaturan
+ * 3. Indikator Status Aktif: Menandai item menu yang sedang dibuka sesuai pathname Next.js.
+ * 4. Sidebar Foot: Menampilkan tahun buku fiskal dan bulan periode akuntansi saat ini.
+ * ============================================================================
+ */
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

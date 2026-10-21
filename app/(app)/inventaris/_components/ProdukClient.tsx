@@ -1,5 +1,20 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN DAFTAR PRODUK & OPERASI STOK (PRODUCT & STOCK CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan katalog produk barang dan aksi pergerakan stok:
+ * 1. Tabel Produk: SKU, nama produk, kategori, stok fisik per gudang, HPP rata-rata, harga jual, dan status ketersediaan.
+ * 2. Operasi Cepat:
+ *    - Stok Masuk (Penerimaan/Pembelian).
+ *    - Stok Keluar (Penjualan/Pemakaian Internal).
+ *    - Opname Fisik (Stock Opname penyesuaian selisih fisik vs sistem).
+ * 3. Modal Tambah Produk Baru: Penetapan master item, satuan, dan batas stok minimum (reorder point).
+ * ============================================================================
+ */
+
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/ui/GlassCard";

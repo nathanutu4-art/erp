@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN DAFTAR ASET TETAP (FIXED ASSETS CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan inventarisasi aktiva tetap berwujud perusahaan:
+ * 1. Tabel Aset: Kode aset (AST-YYYY-NNNN), nama aset, kategori, tanggal perolehan, harga beli awal, nilai buku saat ini, dan status.
+ * 2. Baris Tautan: Mengklik baris aset membuka rincian jadwal amortisasi bulanan `/aset/[id]`.
+ * 3. Modal Tambah Aset: Form pendaftaran aktiva baru, pemilihan masa manfaat (bulan), nilai residu, dan metode penyusutan.
+ * 4. Modal Pelepasan (Disposal): Dialog penghentian aset karena dijual/rusak dengan kalkulasi otomatis laba atau rugi pelepasan.
+ * ============================================================================
+ */
+
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/ui/DataTable";

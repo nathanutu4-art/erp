@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN MANAJEMEN GUDANG (WAREHOUSE CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan master lokasi penyimpanan fisik barang:
+ * 1. Daftar Gudang: Kode gudang unik, nama lokasi, alamat fisik, total varian SKU yang tersimpan, dan total kuantitas stok.
+ * 2. Modal Tambah Gudang: Form pendaftaran lokasi baru (gudang utama, cabang, atau transit).
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PRESENSI & REKAP KEHADIRAN (ATTENDANCE CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan waktu kerja staf perusahaan:
+ * 1. Kehadiran Harian: Pemilih tanggal dan tabel status presensi (Hadir, Terlambat, Cuti, Izin, Sakit, Alpa) beserta jam masuk/pulang.
+ * 2. Rekap Bulanan: Agregasi total kehadiran per karyawan selama satu bulan kalender.
+ * 3. Modal Catat Kehadiran: Dialog manual input/update presensi staf oleh HRD.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

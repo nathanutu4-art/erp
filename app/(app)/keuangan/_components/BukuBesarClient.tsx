@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN BUKU BESAR (GENERAL LEDGER CLIENT)
+ * ============================================================================
+ * 
+ * Menampilkan catatan kronologis historis transaksi per akun terpilih:
+ * 1. Filter Akun & Rentang Tanggal: Memilih akun spesifik serta tanggal mulai dan akhir periode.
+ * 2. Saldo Awal (Opening Balance): Mengakumulasi seluruh mutasi posted sebelum tanggal mulai.
+ * 3. Pergerakan Mutasi: Kolom tanggal, nomor jurnal, keterangan, debit, kredit, dan saldo berjalan (running balance).
+ * 4. Saldo Akhir (Closing Balance): Menampilkan total akumulasi bersih pada akhir periode.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { getLedger, type LedgerResult } from "../actions";
 import { formatIDR, formatTanggal } from "@/lib/format";

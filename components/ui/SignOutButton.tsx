@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * TOMBOL KELUAR SISTEM (SIGN OUT BUTTON)
+ * ============================================================================
+ * 
+ * Komponen Client Component untuk mengakhiri sesi login pengguna:
+ * 1. Menghapus sesi otentikasi melalui `supabase.auth.signOut()`.
+ * 2. Membersihkan cookie sesi di browser.
+ * 3. Mengarahkan kembali pengguna ke halaman `/login` dengan `router.refresh()`.
+ * ============================================================================
+ */
+
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 

@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PROFIL LENGKAP PELANGGAN (CUSTOMER DETAIL CLIENT)
+ * ============================================================================
+ * 
+ * Tampilan analitik 360 derajat interaksi dengan satu pelanggan tertentu:
+ * 1. Kartu Ringkasan Finansial: Total Penjualan Akumulatif, Total Terbayar, Sisa Piutang Berjalan, dan Sisa Batas Kredit Tersedia.
+ * 2. Riwayat Faktur Penjualan: Daftar seluruh invoice yang pernah diterbitkan beserta status pembayarannya.
+ * 3. Linimasa Interaksi (Activity Timeline): Catatan komunikasi (Meeting, Telepon, Email, WhatsApp) dan tombol pencatatan aktivitas baru.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/ui/DataTable";

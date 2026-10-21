@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN BERSAMA PEMBELIAN & PENJUALAN (SHARED COMMERCE COMPONENTS)
+ * ============================================================================
+ * 
+ * Kumpulan elemen antarmuka pembantu modul pembelian dan penjualan:
+ * 1. ErrorAlert: Penampil pesan kesalahan aksi dalam banner rose yang mencolok.
+ * 2. ModalActions: Tombol footer standar modal (Batal dan Simpan/Konfirmasi).
+ * 3. StatusBadge: Penanda status visual dengan titik indikator warna (`.badge`).
+ * 4. EmptyState: Tampilan informatif ketika data tabel masih kosong.
+ * ============================================================================
+ */
+
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassInput } from "@/components/ui/GlassInput";
 import { formatIDR, formatTanggal } from "@/lib/format";

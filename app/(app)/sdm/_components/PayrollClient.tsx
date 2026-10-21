@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PAYROLL & PENGGAJIAN (PAYROLL CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan siklus penggajian bulanan perusahaan:
+ * 1. Kartu Statistik Periode: Total Gaji Bruto, Gaji Bersih (Take Home Pay), Potongan PPh 21 TER, dan Beban BPJS Perusahaan.
+ * 2. Tabel Slip Gaji: Rincian per karyawan (gaji pokok, tunjangan, potongan BPJS Kesehatan 1%, JHT 2%, JP 1%, PPh 21, dan total bersih).
+ * 3. Modal Pratinjau Dokumen Cetak: Menampilkan slip gaji berformat kertas resmi lengkap dengan kop surat perusahaan.
+ * 4. Workflow Periode: Pembentukan periode draf, finalisasi, pembayaran lunas, dan pembukuan beban ke akuntansi.
+ * ============================================================================
+ */
+
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

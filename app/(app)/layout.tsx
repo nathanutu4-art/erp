@@ -1,3 +1,16 @@
+/**
+ * ============================================================================
+ * MAIN APP LAYOUT (AUTHENTICATED SHELL WRAPPER)
+ * ============================================================================
+ * 
+ * Server Component pembungkus seluruh modul aplikasi yang terproteksi:
+ * 1. Verifikasi Sesi & Profil Pengguna: Memastikan pengguna terotentikasi dan profil berstatus aktif.
+ * 2. Injeksi Profil Perusahaan: Mengambil data nama dan alamat perusahaan dari tabel `companies` (singleton)
+ *    untuk disalurkan ke komponen Sidebar dan Topbar melalui `AppShell`.
+ * 3. Fallback Akses Ditolak: Menampilkan kartu peringatan jika akun dinonaktifkan dengan opsi keluar akun.
+ * ============================================================================
+ */
+
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";

@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * MODAL PRATINJAU DOKUMEN CETAK (PRINT PREVIEW COMPONENT)
+ * ============================================================================
+ * 
+ * Dialog pratinjau dokumen cetak A4 fisik berstandar Indonesia:
+ * 1. Kop Surat Resmi: Menampilkan logo inisial, nama perusahaan, alamat, telepon, dan NPWP dari `company_settings`.
+ * 2. Lembar Kertas `.paper`: Format bersih putih dengan tabel item barang, subtotal, ringkasan pajak, dan kolom tanda tangan.
+ * 3. Aksi Cetak PDF: Mendukung perintah cetak langsung browser (`window.print()`).
+ * ============================================================================
+ */
+
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassModal } from "@/components/ui/GlassModal";
 import type { CompanyLetterhead } from "../_lib/jualbeli";

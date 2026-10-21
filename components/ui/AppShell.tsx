@@ -1,5 +1,19 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN SHELL UTAMA APLIKASI (APP SHELL)
+ * ============================================================================
+ * 
+ * Kerangka tata letak terpadu yang membungkus seluruh halaman di dalam rute `(app)`:
+ * 1. Sidebar Navigasi: Menampilkan logo, nama perusahaan dinamis, menu modul, dan footer tahun buku.
+ * 2. Mobile Drawer & Backdrop: Menangani buka/tutup menu di layar ponsel (responsif).
+ * 3. Topbar Header: Judul modul aktif, rekam jejak (breadcrumb), chip indikator sistem aktif,
+ *    periode bulan berjalan, tombol notifikasi, avatar profil pengguna, dan tombol Sign Out.
+ * 4. Main Content Container: Area konten utama tempat halaman modul dimuat.
+ * ============================================================================
+ */
+
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/ui/Sidebar";

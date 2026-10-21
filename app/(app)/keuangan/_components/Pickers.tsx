@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PEMILIH PERIODE & TANGGAL (DATE & PERIOD PICKERS)
+ * ============================================================================
+ * 
+ * Komponen pemilih waktu yang mengupdate parameter URL query secara reaktif:
+ * 1. PeriodePicker: Memilih bulan dan tahun (input month) untuk Laba Rugi dan Arus Kas.
+ * 2. TanggalPicker: Memilih tanggal spesifik (input date) untuk posisi Neraca.
+ * ============================================================================
+ */
+
 import { usePathname, useRouter } from "next/navigation";
 
 /** Pemilih bulan (input type=month) yang menulis ?tab=…&periode=YYYY-MM ke URL. */

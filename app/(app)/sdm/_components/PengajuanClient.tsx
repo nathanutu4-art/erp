@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PENGAJUAN CUTI & IZIN (LEAVE REQUESTS CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan alur perizinan dan cuti karyawan:
+ * 1. Banner Alur Approval: Panduan alur persetujuan atasan langsung & wewenang takeover oleh HR.
+ * 2. Tabel Pengajuan: Menampilkan nama pemohon, jenis (Cuti Tahunan, Izin, Sakit), rentang tanggal, durasi hari, dan status.
+ * 3. Aksi Cepat: Tombol persetujuan (Setujui / Tolak) yang langsung memutasi status pengajuan dan memotong kuota cuti.
+ * 4. Modal Ajukan: Form permohonan baru dengan kalkulasi otomatis jumlah hari kerja inklusif.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

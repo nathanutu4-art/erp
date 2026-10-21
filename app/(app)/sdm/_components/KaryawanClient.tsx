@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN DAFTAR KARYAWAN (EMPLOYEE DIRECTORY CLIENT)
+ * ============================================================================
+ * 
+ * Antarmuka pengelolaan data induk karyawan:
+ * 1. Tabel Karyawan: Menampilkan foto/avatar inisial, nama, NIK (EMP-YYYY-NNNN), jabatan, departemen, dan status.
+ * 2. Pencarian & Filter: Penyaringan teks nama/jabatan dengan debounce dan filter departemen.
+ * 3. Modal Tambah Karyawan: Form pendaftaran staf baru, tanggal mulai kerja, atasan langsung, dan gaji pokok.
+ * ============================================================================
+ */
+
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";

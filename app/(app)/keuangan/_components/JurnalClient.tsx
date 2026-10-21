@@ -1,5 +1,19 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN JURNAL UMUM (GENERAL JOURNAL CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan entri jurnal akuntansi berpasangan (double-entry bookkeeping):
+ * 1. Daftar Jurnal: Menampilkan nomor jurnal (JU-YYYY-NNNN), tanggal, deskripsi, total nilai, dan badge status.
+ * 2. Baris Interaktif: Mengklik baris tabel mengarahkan pengguna ke halaman rincian detail jurnal `/keuangan/jurnal/[id]`.
+ * 3. Modal Form Buat Jurnal (`JurnalFormModal`):
+ *    - Baris dinamis debit dan kredit (tambah/hapus baris).
+ *    - Balance Bar Real-Time: Memvalidasi secara instan bahwa Total Debit == Total Kredit (selisih Rp 0) sebelum disimpan.
+ * ============================================================================
+ */
+
 import { useMemo, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

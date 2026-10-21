@@ -1,5 +1,25 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN PENGATURAN SISTEM ERP (SETTINGS CLIENT)
+ * ============================================================================
+ * 
+ * Antarmuka terpadu pengelolaan konfigurasi global sistem ERP (3 Subtab):
+ * 1. Tab Profil Perusahaan:
+ *    - Form profil entitas: Nama legal, alamat operasional, telepon, email resmi, dan NPWP.
+ *    - Validasi interaktif seketika dan live preview lembar A4 (.paper) kop surat resmi.
+ *    - Sinkronisasi data ke Supabase via Server Action `saveCompanyProfile`.
+ * 2. Tab Persetujuan & Kebijakan:
+ *    - Konfigurasi alur kerja approval (Takeover HRD untuk cuti/lembur, persetujuan PO).
+ *    - Pemilihan metode akuntansi: Valuasi persediaan (FIFO / Rata-rata Bergerak) dan
+ *      metode depresiasi default aktiva tetap (Garis Lurus / Saldo Menurun Ganda).
+ * 3. Tab Template Dokumen Cetak:
+ *    - Manajemen template dokumen bisnis resmi (Faktur Penjualan, PO, Surat Jalan, dll).
+ *    - Pengaturan status aktif/non-aktif template cetak serta modal pratinjau fisik A4.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { GlassButton } from "@/components/ui/GlassButton";
 import {

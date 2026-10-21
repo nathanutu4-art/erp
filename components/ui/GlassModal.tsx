@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * DIALOG MODAL KACA (GLASS MODAL)
+ * ============================================================================
+ * 
+ * Jendela dialog overlay kaca transparan dengan animasi pop:
+ * 1. Overlay Backdrop: Menutupi layar dengan blur 7px dan menangkap klik luar untuk menutup modal.
+ * 2. Aksesibilitas: Mendukung tombol `Escape` keyboard untuk menutup dialog (`aria-modal="true"`).
+ * 3. Header Terpadu: Judul, deskripsi singkat, dan tombol silang (✕) penutup.
+ * 4. Pilihan Ukuran: Mode normal (max-width 520px) atau mode lebar (`wide`, max-width 760px).
+ * ============================================================================
+ */
+
 import { useEffect } from "react";
 
 type GlassModalProps = {

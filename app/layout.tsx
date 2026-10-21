@@ -1,3 +1,15 @@
+/**
+ * ============================================================================
+ * ROOT LAYOUT (GLOBAL APPLICATION WRAPPER)
+ * ============================================================================
+ * 
+ * Layout tingkat teratas Next.js App Router:
+ * 1. Pemuatan Font: Memuat Google Fonts (Plus Jakarta Sans untuk UI body, JetBrains Mono untuk angka/kode).
+ * 2. Visual Aurora Canvas: Merender 4 orb gradien animasi di belakang layar untuk efek glassmorphism modern.
+ * 3. Konfigurasi Metadata: Judul default dan deskripsi meta aplikasi ERP.
+ * ============================================================================
+ */
+
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";

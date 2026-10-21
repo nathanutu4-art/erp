@@ -1,3 +1,15 @@
+/**
+ * ============================================================================
+ * KOMPONEN FORMAT LAPORAN KEUANGAN RESMI (FINANCIAL REPORTS)
+ * ============================================================================
+ * 
+ * Kumpulan 3 komponen cetak dan tampilan laporan keuangan baku:
+ * 1. LaporanLabaRugi: Pendapatan operasional dikurangi HPP & beban operasional untuk menghasilkan laba/rugi bersih.
+ * 2. LaporanNeraca: Menyajikan Aset Lancar, Aset Tetap, Liabilitas, dan Ekuitas dengan baris verifikasi keseimbangan.
+ * 3. LaporanArusKas: Arus kas bersih dari aktivitas Operasi, Investasi, dan Pendanaan serta rekonsiliasi kas akhir.
+ * ============================================================================
+ */
+
 import { formatIDR, formatTanggal } from "@/lib/format";
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * ============================================================================
+ * AKSI DETAIL JURNAL (JOURNAL DETAIL ACTIONS)
+ * ============================================================================
+ * 
+ * Bilah tombol kontrol status jurnal pada halaman rincian jurnal `/keuangan/jurnal/[id]`:
+ * - "Bukukan Jurnal" (`postJournalEntry`): Mengubah status draf menjadi terposting (masuk ke buku besar).
+ * - "Batalkan Jurnal" (`voidJournalEntry`): Membatalkan jurnal dengan konfirmasi dialog aman.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {

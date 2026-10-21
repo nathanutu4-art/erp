@@ -1,3 +1,14 @@
+/**
+ * ============================================================================
+ * WADAH TABEL DATA TERPADU (DATA TABLE CONTAINER)
+ * ============================================================================
+ * 
+ * Membungkus tabel data ke dalam kartu kaca (`.card` + `.card-head` + `.tbl-wrap`):
+ * 1. Card Header: Judul tabel, sub-judul informasi jumlah baris, bilah pencarian (`search-box`), dan slot tombol aksi.
+ * 2. Table Wrapper: Wadah scroll horizontal responsif (`.tbl-wrap`) untuk elemen tabel `table.tbl`.
+ * ============================================================================
+ */
+
 import type { ReactNode } from "react";
 
 type DataTableProps = {

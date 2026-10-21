@@ -1,5 +1,21 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN JADWAL AMORTISASI & PENYUSUTAN ASET (DEPRECIATION SCHEDULE CLIENT)
+ * ============================================================================
+ * 
+ * Menampilkan dan mengelola jadwal depresiasi bulanan per aset tetap:
+ * 1. Tabel Amortisasi: Periode berjalan (YYYY-MM), beban penyusutan per bulan,
+ *    akumulasi depresiasi, dan sisa nilai buku (book value).
+ * 2. Pembukuan Otomatis: Tombol "Bukukan Depresiasi" untuk mengeksekusi
+ *    Server Action `postDepreciation`, yang secara otomatis membuat entri jurnal umum
+ *    (Beban Depresiasi pada Akumulasi Depresiasi) di modul akuntansi.
+ * 3. Status Terbuku: Menampilkan lencana nomor referensi jurnal terkait jika periode
+ *    tersebut sudah dibukukan ke buku besar.
+ * ============================================================================
+ */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/ui/GlassCard";

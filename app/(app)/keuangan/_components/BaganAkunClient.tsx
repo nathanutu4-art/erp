@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN BAGAN AKUN (CHART OF ACCOUNTS CLIENT)
+ * ============================================================================
+ * 
+ * Antarmuka interaktif pengelolaan daftar akun buku besar (COA):
+ * 1. Filter & Pencarian: Menyaring akun berdasarkan kata kunci (kode/nama) dan tipe akun (Aset, Liabilitas, Ekuitas, Pendapatan, Beban).
+ * 2. Visualisasi Saldo: Menghitung saldo normal debit/kredit per akun sesuai kaidah akuntansi PSAK.
+ * 3. Modal Tambah Akun: Dialog pembuatan akun baru dengan validasi format kode akun dan tipe klasifikasi.
+ * ============================================================================
+ */
+
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassModal } from "@/components/ui/GlassModal";

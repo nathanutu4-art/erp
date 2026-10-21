@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN SURAT JALAN (DELIVERY NOTE CLIENT)
+ * ============================================================================
+ * 
+ * Pengelolaan dokumen pengiriman barang ke pelanggan:
+ * 1. Tabel Surat Jalan: Nomor dokumen (SJ-YYYY-NNNN), referensi invoice, pelanggan, tanggal kirim, nomor polisi kendaraan, pengemudi, dan status.
+ * 2. Pembuatan Surat Jalan: Mengaitkan surat jalan ke invoice penjualan dan mengurangi stok barang secara resmi dari gudang.
+ * 3. Pratinjau Dokumen Cetak: Menampilkan format Surat Jalan cetak dengan kop surat perusahaan dan kolom tanda tangan pengirim/penerima.
+ * ============================================================================
+ */
+
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/ui/GlassCard";

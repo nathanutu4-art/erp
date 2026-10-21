@@ -1,3 +1,13 @@
+/**
+ * ============================================================================
+ * SUBTABS NAVIGASI MODUL INVENTARIS (INVENTORY TABS)
+ * ============================================================================
+ * 
+ * Bilah navigasi horizontal kaca (`.subtabs`) untuk berpindah sub-modul inventaris:
+ * - Master Produk | Daftar Gudang | Kartu Stok
+ * ============================================================================
+ */
+
 import Link from "next/link";
 
 const TABS = [
