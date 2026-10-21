@@ -1,3 +1,19 @@
+/**
+ * ============================================================================
+ * MODUL SDM & KEHADIRAN (HUMAN RESOURCES & PAYROLL MODULE)
+ * ============================================================================
+ * 
+ * Halaman Server Component pengelola siklus hidup ketenagakerjaan perusahaan:
+ * 1. Karyawan: Direktori master data staf, status PKWT/PKWTT/Probation, gaji pokok, dan jabatan.
+ * 2. Kehadiran: Pencatatan presensi harian (hadir, telat, izin, sakit, alpa) dan rekap bulanan.
+ * 3. Pengajuan Cuti & Izin: Workflow persetujuan permohonan berjenjang (atasan langsung + HR takeover).
+ * 4. Payroll (Penggajian): Kalkulasi slip gaji otomatis bulanan sesuai hukum ketenagakerjaan Indonesia:
+ *    - Potongan Pajak PPh 21 TER (Peraturan Pemerintah No. 58 Tahun 2023).
+ *    - BPJS Kesehatan (1% karyawan, 4% perusahaan).
+ *    - BPJS Ketenagakerjaan (JHT 2%, JP 1%, JKK, JKM).
+ * ============================================================================
+ */
+
 import { SdmTabs } from "./_components/SdmTabs";
 import { KaryawanClient } from "./_components/KaryawanClient";
 import { KehadiranClient } from "./_components/KehadiranClient";

@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * MODUL KEUANGAN & AKUNTANSI (FINANCE & ACCOUNTING MODULE)
+ * ============================================================================
+ * 
+ * Halaman Server Component utama untuk mengelola pembukuan dan akuntansi perusahaan:
+ * 1. Bagan Akun (Chart of Accounts / COA): Master klasifikasi akun (Aset, Liabilitas, Ekuitas, Pendapatan, Beban).
+ * 2. Jurnal Umum (General Journal): Pencatatan transaksi double-entry (Debit & Kredit) dengan status Draf, Terposting, dan Batal.
+ * 3. Buku Besar (General Ledger): Rincian mutasi debit/kredit per akun spesifik dengan saldo berjalan (running balance).
+ * 4. Laporan Laba Rugi (Income Statement): Menghitung pendapatan operasional, HPP, beban operasional, dan laba bersih periode berjalan.
+ * 5. Neraca (Balance Sheet): Posisi keuangan perusahaan (Total Aset = Total Liabilitas + Total Ekuitas) per tanggal tertentu.
+ * 6. Laporan Arus Kas (Cash Flow Statement): Arus kas dari aktivitas operasi, investasi, dan pendanaan.
+ * 
+ * Standar Akuntansi:
+ * - Mengikuti kaidah Standar Akuntansi Keuangan (SAK / PSAK) Indonesia.
+ * - Saldo normal: Aset & Beban bertambah di Debit; Liabilitas, Ekuitas, & Pendapatan bertambah di Kredit.
+ * ============================================================================
+ */
+
 import { GlassCard } from "@/components/ui/GlassCard";
 import { createClient } from "@/lib/supabase/server";
 import { formatTanggal } from "@/lib/format";

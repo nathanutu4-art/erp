@@ -1,3 +1,19 @@
+/**
+ * ============================================================================
+ * MODUL PEMBELIAN & PENJUALAN (PURCHASING & SALES MODULE)
+ * ============================================================================
+ * 
+ * Mengelola siklus perdagangan (procure-to-pay dan order-to-cash):
+ * 1. Purchase Order (PO): Pemesanan barang ke supplier dengan persetujuan bertingkat (Direktur jika > Rp 50jt).
+ * 2. Invoice Penjualan: Penagihan ke pelanggan dengan perhitungan PPN 11%, NSFP Faktur Pajak, dan pelunasan bertahap.
+ * 3. Surat Jalan (Delivery Note): Dokumen legalitas pengiriman fisik barang yang terhubung ke nomor invoice.
+ * 
+ * Kepatuhan Regulasi Indonesia:
+ * - Faktur Pajak elektronik (e-Faktur DJP) format CSV.
+ * - Kop surat resmi dokumen cetak dinamis dari Pengaturan Perusahaan.
+ * ============================================================================
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { PembelianPenjualanTabs } from "./_components/PembelianPenjualanTabs";
 import { PoClient } from "./_components/PoClient";

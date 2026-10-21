@@ -1,5 +1,21 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL KEUANGAN & AKUNTANSI
+ * ============================================================================
+ * 
+ * Berisi seluruh logika bisnis mutasi data keuangan yang dieksekusi di server:
+ * 1. createAccount(): Mendaftarkan akun baru ke Bagan Akun (COA) dengan validasi keunikan kode.
+ * 2. createJournalEntry(): Membuat draf jurnal umum dengan baris multi-debit/kredit,
+ *    memverifikasi keseimbangan matematis (Total Debit == Total Kredit dalam satuan sen).
+ * 3. postJournalEntry(): Membukukan jurnal ke buku besar (posted status) dan mencegah
+ *    perubahan jika periode akuntansi tanggal bersangkutan telah ditutup (closed fiscal period).
+ * 4. voidJournalEntry(): Membatalkan jurnal yang telah terposting dengan proteksi audit trail.
+ * 5. getBukuBesar(): Mengambil riwayat mutasi jurnal per akun dan menghitung saldo awal serta running balance.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

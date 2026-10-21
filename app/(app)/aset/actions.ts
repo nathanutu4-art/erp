@@ -1,5 +1,17 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL ASET TETAP
+ * ============================================================================
+ * 
+ * Mengendalikan mutasi nilai aset tetap dan kalkulasi akuntansi depresiasi:
+ * 1. createAsset(): Mendaftarkan aset baru, membuat nomor AST-YYYY-NNNN, dan menghasilkan baris jadwal penyusutan.
+ * 2. postDepreciationEntry(): Membukukan beban depresiasi bulan berjalan ke jurnal umum akuntansi (Debit Beban Penyusutan, Kredit Akumulasi Penyusutan).
+ * 3. disposeAsset(): Menghentikan aset (karena dijual, rusak, atau dihibahkan), menghitung laba/rugi pelepasan, dan membentuk jurnal disposal.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

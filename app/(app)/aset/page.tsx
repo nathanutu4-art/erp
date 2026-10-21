@@ -1,3 +1,16 @@
+/**
+ * ============================================================================
+ * MODUL ASET TETAP (FIXED ASSETS MODULE)
+ * ============================================================================
+ * 
+ * Mengelola aktiva tetap berwujud perusahaan dari perolehan hingga pelepasan (disposal):
+ * 1. Inventarisasi Aset: Nomor kode AST-YYYY-NNNN, nama aset, kategori (Kendaraan, Peralatan, Bangunan), dan lokasi fisik.
+ * 2. Nilai Perolehan & Nilai Buku: Memantau harga beli awal, akumulasi penyusutan, dan sisa nilai buku (book value).
+ * 3. Jadwal Penyusutan Bulanan: Menghitung amortisasi beban depresiasi periodik berdasarkan masa manfaat.
+ * 4. Pelepasan / Penghentian Aset: Menghitung laba atau rugi pelepasan aset tetap saat dijual atau dihapusbukukan.
+ * ============================================================================
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { AsetClient, type AssetRow, type CategoryOption } from "./_components/AsetClient";
 import { toNumber, one } from "./_lib/aset";

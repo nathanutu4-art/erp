@@ -1,5 +1,18 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL INVENTARIS & GUDANG
+ * ============================================================================
+ * 
+ * Mengatur seluruh mutasi fisik dan penilaian nilai persediaan barang:
+ * 1. createProduct(): Menambahkan item barang baru dengan penetapan SKU dan satuan stok.
+ * 2. recordStockMovement(): Mencatat pergerakan barang (Stok Masuk, Stok Keluar, Opname Fisik, Transfer Antar Gudang).
+ * 3. updateMovingAverage(): Memperbarui Harga Pokok Penjualan (HPP) berdasarkan formula rata-rata tertimbang.
+ * 4. createWarehouse(): Menambahkan lokasi gudang penyimpanan baru.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { formatIDR } from "@/lib/format";

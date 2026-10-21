@@ -1,5 +1,18 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL CRM PELANGGAN
+ * ============================================================================
+ * 
+ * Logika mutasi relasi pelanggan di sisi server:
+ * 1. createCustomer(): Mendaftarkan pelanggan baru dan menghasilkan nomor unik CUST-YYYY-NNNN.
+ * 2. updateCustomer(): Memperbarui informasi kontak, alamat, dan plafon kredit pelanggan.
+ * 3. toggleCustomerStatus(): Mengaktifkan atau menonaktifkan status akun pelanggan.
+ * 4. recordCustomerInteraction(): Mencatat log interaksi (pertemuan, panggilan telepon, email penawaran).
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

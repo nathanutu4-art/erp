@@ -1,3 +1,15 @@
+/**
+ * ============================================================================
+ * MODUL PENGATURAN PERUSAHAAN & SISTEM (COMPANY & SYSTEM SETTINGS)
+ * ============================================================================
+ * 
+ * Mengelola konfigurasi identitas perusahaan dan aturan global aplikasi (singleton):
+ * 1. Profil Perusahaan: Nama resmi, alamat, telepon, email, NPWP, dan kop surat dokumen.
+ * 2. Persetujuan & Metode: Penilaian persediaan (Average/FIFO), depresiasi default (Garis Lurus/Saldo Menurun), dan alur approval.
+ * 3. Template Cetak: Status ketersediaan 5 format standar dokumen komersial Indonesia (Invoice, PO, Surat Jalan, Kuitansi, Slip Gaji).
+ * ============================================================================
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { PengaturanClient } from "./_components/PengaturanClient";
 

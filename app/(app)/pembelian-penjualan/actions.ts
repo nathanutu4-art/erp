@@ -1,5 +1,22 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL PEMBELIAN & PENJUALAN
+ * ============================================================================
+ * 
+ * Mengendalikan alur kerja transaksi komersial dan perpajakan:
+ * 1. createPurchaseOrder(): Menerbitkan nomor PO (PO-YYYY-NNNN) dan baris pesanan barang.
+ * 2. decidePurchaseOrder(): Menyetujui atau menolak PO berdasarkan batas otorisasi.
+ * 3. receiveGoods(): Mencatat penerimaan barang supplier dan menambah kuantitas stok gudang.
+ * 4. createInvoice(): Menerbitkan invoice penjualan (INV-YYYY-NNNN) dengan perhitungan DPP & PPN 11%.
+ * 5. recordPayment(): Mencatat pelunasan pembayaran piutang invoice secara tunai/transfer.
+ * 6. exportFakturPajakCsv(): Mengonversi invoice menjadi skema CSV impor resmi aplikasi e-Faktur DJP.
+ * 7. createDeliveryNote(): Menerbitkan Surat Jalan (SJ-YYYY-NNNN) dan mencatat mutasi barang keluar.
+ * 8. getCompanyLetterhead(): Mengambil identitas kop surat perusahaan untuk pratinjau dan cetak dokumen.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

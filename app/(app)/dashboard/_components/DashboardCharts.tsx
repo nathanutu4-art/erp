@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ============================================================================
+ * KOMPONEN GRAFIK DASHBOARD (DASHBOARD CHARTS)
+ * ============================================================================
+ * 
+ * Komponen interaktif sisi klien (Client Component) untuk visualisasi analitik bisnis:
+ * 1. Grafik Batang (Bar Chart): Membandingkan Pendapatan (Revenue) vs Beban (Expense)
+ *    selama 12 bulan terakhir dengan interaksi hover tooltip berbasis SVG dinamis.
+ * 2. Grafik Donat (Donut Chart): Menampilkan komposisi dan proporsi biaya operasional
+ *    (HPP, Gaji, Sewa, Pemasaran, Utilitas, dsb.) dengan kalkulasi persentase otomatis.
+ * ============================================================================
+ */
+
 import { useState } from "react";
 
 type BarData = {

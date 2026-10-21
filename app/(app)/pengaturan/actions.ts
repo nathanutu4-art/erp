@@ -1,5 +1,19 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL PENGATURAN (SETTINGS ACTIONS)
+ * ============================================================================
+ * 
+ * Mengatur persistensi data konfigurasi perusahaan ke database Supabase:
+ * 1. saveCompanyProfile(): Melakukan upsert pada tabel companies dan menyinkronkan kop surat ke company_settings.
+ * 2. updateCostingMethod(): Menyimpan preferensi metode kalkulasi HPP persediaan (Average/FIFO).
+ * 3. updateDepreciationMethod(): Menyimpan default metode depresiasi aset tetap (Straight-Line/Declining-Balance).
+ * 4. updateApprovalSettings(): Mengonfigurasi wewenang takeover persetujuan oleh divisi HR.
+ * 5. togglePrintTemplate(): Mengaktifkan atau menonaktifkan template dokumen cetak pada tabel print_templates.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

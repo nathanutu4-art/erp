@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * ============================================================================
+ * MODUL OTENTIKASI & MASUK SISTEM (AUTH LOGIN PAGE)
+ * ============================================================================
+ * 
+ * Halaman masuk pengguna ke sistem ERP berbasis Supabase Auth:
+ * 1. Otentikasi Email & Kata Sandi: Memverifikasi pengguna via Supabase client-side Auth.
+ * 2. Penanganan Sesi & Cookie: Token sesi JWT disimpan di cookie untuk verifikasi di Next.js middleware & Server Actions.
+ * 3. Pengalihan Otomatis: Mengarahkan pengguna aktif ke Dashboard setelah berhasil masuk.
+ * ============================================================================
+ */
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";

@@ -1,3 +1,16 @@
+/**
+ * ============================================================================
+ * MODUL CRM PELANGGAN (CUSTOMER RELATIONSHIP MANAGEMENT)
+ * ============================================================================
+ * 
+ * Mengelola data master pelanggan, profil risiko kredit, dan interaksi penjualan:
+ * 1. Direktori Pelanggan: Kode CUST-YYYY-NNNN, nama bisnis/personal, kontak, email, dan alamat.
+ * 2. Manajemen Kredit (Plafon Kredit): Pengendalian batas piutang maksimal per pelanggan.
+ * 3. Status Piutang Berjalan: Kalkulasi total tagihan terbuka (open receivables) dan invoice jatuh tempo.
+ * 4. Detail 360 Derajat: Riwayat transaksi invoice, catatan interaksi (telepon/meeting/email), dan status aktif.
+ * ============================================================================
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { CrmClient, type CustomerRow } from "./_components/CrmClient";
 import { toNumber } from "./_lib/crm";

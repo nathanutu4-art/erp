@@ -1,5 +1,19 @@
 "use server";
 
+/**
+ * ============================================================================
+ * SERVER ACTIONS MODUL SDM & KEHADIRAN (HR ACTIONS)
+ * ============================================================================
+ * 
+ * Mengeksekusi mutasi data ketenagakerjaan secara aman di sisi server:
+ * 1. createEmployee(): Mendaftarkan staf baru dan menghasilkan nomor induk otomatis EMP-YYYY-NNNN.
+ * 2. recordAttendance(): Mencatat log presensi harian per karyawan beserta jam masuk/pulang.
+ * 3. createLeaveRequest(): Mengajukan cuti/izin/sakit dengan validasi kuota cuti tahunan tersisa.
+ * 4. decideLeaveRequest(): Memproses persetujuan (approve/reject) oleh atasan langsung atau takeover HR.
+ * 5. generatePayrollPeriod(): Menghasilkan periode penggajian dan mengalkulasi slip gaji seluruh staf aktif.
+ * ============================================================================
+ */
+
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";

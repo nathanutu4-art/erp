@@ -1,3 +1,18 @@
+/**
+ * ============================================================================
+ * MODUL INVENTARIS & GUDANG (INVENTORY & WAREHOUSE MODULE)
+ * ============================================================================
+ * 
+ * Modul Server Component untuk manajemen persediaan barang dan pergudangan:
+ * 1. Produk (Item Master): Daftar SKU, nama produk, kategori, satuan, harga beli, harga jual, dan stok total.
+ * 2. Kartu Stok (Stock Card): Riwayat mutasi masuk/keluar per produk di setiap gudang dengan running balance.
+ * 3. Gudang (Warehouse Management): Daftar lokasi fisik penyimpanan barang, kapasitas, dan status operasional.
+ * 
+ * Metode Penilaian:
+ * - Menggunakan metode Biaya Rata-Rata Bergerak (Moving Average Costing) sesuai PSAK 14 dan regulasi perpajakan.
+ * ============================================================================
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { InventarisTabs } from "./_components/InventarisTabs";
 import {

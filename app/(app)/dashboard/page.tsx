@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * MODUL DASHBOARD UTAMA (EXECUTIVE DASHBOARD)
+ * ============================================================================
+ * 
+ * Modul ini berfungsi sebagai pusat ikhtisar bisnis (command center) perusahaan.
+ * Bertanggung jawab mengumpulkan metrik lintas modul secara real-time dari Supabase:
+ * 1. Keuangan: Pendapatan bulan berjalan, Laba Bersih, Saldo Kas & Bank, Total Piutang Usaha, Total Hutang Usaha.
+ * 2. Operasional: Antrean persetujuan cuti/izin/sakit karyawan yang tertunda (pending leave requests).
+ * 3. Pembelian: Antrean Purchase Order (PO) yang menunggu approval pimpinan.
+ * 4. Akuntansi: Transaksi jurnal umum terbaru beserta status buku dan total mutasi debit/kredit.
+ * 
+ * Arsitektur:
+ * - Server Component Next.js (SSR) yang mengambil data langsung dari PostgreSQL melalui Supabase Client.
+ * - Menggunakan isolasi database single-tenant (1 database = 1 perusahaan).
+ * ============================================================================
+ */
+
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
